@@ -1,0 +1,71 @@
+{
+  "name": "commons-config",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thinkbaer/node-commons-config.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thinkbaer/node-commons-config/issues"
+  },
+  "homepage": "https://github.com/thinkbaer/node-commons-config#readme",
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/deepmerge": "^1.3.1",
+    "@types/mocha": "^2.2.38",
+    "@types/node": "^7.0.18",
+    "@types/object-assign": "^4.0.30",
+    "chai": "^4.0.2",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-mocha": "^4.3.1",
+    "gulp-replace": "^0.5.4",
+    "gulp-shell": "^0.6.3",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-tslint": "^8.1.1",
+    "gulp-typescript": "^3.1.7",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.10",
+    "gulpclass": "^0.1.2",
+    "mocha": "^3.4.2",
+    "mocha-typescript": "^1.1.4",
+    "nyc": "^10.3.2",
+    "source-map-support": "^0.4.15",
+    "ts-node": "^1.7.3",
+    "tslint-stylish": "^2.1.0",
+    "typescript": "^2.3.4",
+    "typescript-object-utils": "^0.2.6",
+    "typescript-require": "^0.2.9-1",
+    "watchify": "^3.7.0",
+    "x2js": "^3.1.1"
+  },
+  "dependencies": {
+    "deepmerge": "^1.3.2",
+    "glob": "^7.1.2"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
+}
