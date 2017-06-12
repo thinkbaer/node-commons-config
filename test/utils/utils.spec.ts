@@ -7,7 +7,7 @@ import {suite, test, slow, timeout, pending} from "mocha-typescript";
 import {expect} from "chai";
 import {inspect} from "util";
 import {ConfigJar} from "../../src/config/ConfigJar";
-import {ConfigReader} from "../../src/config/ConfigReader";
+import {FileSupport} from "../../src/filesupport/FileSupport";
 import {Utils} from "../../src/utils/Utils";
 
 
@@ -17,6 +17,54 @@ import {Utils} from "../../src/utils/Utils";
 
 @suite('utils/Utils')
 class UtilsTests {
+
+    @test
+    'set' () {
+        // set first value x=1
+        let x:any = {}
+        let z = Utils.set(x,'x',1)
+        expect(z).to.be.true
+        expect(x).to.deep.eq({x:1})
+
+        // set first value y=2
+        z = Utils.set(x,'y',2)
+        expect(z).to.be.true
+        expect(x).to.deep.eq({x:1,y:2})
+
+        z = Utils.set(x,'z.0',3)
+        expect(z).to.be.true
+        expect(x).to.deep.eq({x:1,y:2,z:[3]})
+
+        z = Utils.set(x,'z.1',4)
+        expect(z).to.be.true
+        expect(x).to.deep.eq({x:1,y:2,z:[3,4]})
+
+        // Override existing as array
+        z = Utils.set(x,'z.1',5)
+        expect(z).to.be.true
+        expect(x).to.deep.eq({x:1,y:2,z:[3,5]})
+
+        // Override failed wrong type
+        z = Utils.set(x,'z',5)
+        expect(z).to.be.false
+        expect(x).to.deep.eq({x:1,y:2,z:[3,5]})
+
+        // set array y.0 => create array
+        // set array z.x => create object
+
+
+/*
+        z = Utils.set(x,'z',3)
+        expect(z).to.be.true
+        expect(x).to.deep.eq({x:2,y:1,z:3})
+
+        // Override?
+        /*
+        z = Utils.set(x,'x.y',2)
+        expect(z).to.be.true
+        expect(x).to.deep.eq({x:{y:2},y:1})
+*/
+    }
 
     @test
     'get' () {
@@ -92,6 +140,15 @@ class UtilsTests {
         z = Utils.merge(x,y)
         expect(z).to.deep.eq({x:{d:1,c:1,e:{a:2,b:2}}})
 
+    }
+
+    @test
+    'clone' (){
+        let x:any = {x:1}
+        let y:any = Utils.clone(x)
+
+        expect(x).to.not.eq(y)
+        expect(x).to.deep.eq(y)
     }
 
 }

@@ -1,11 +1,12 @@
 
-import {IConfigReader} from "../config/IConfigReader";
-import {IConfigData} from "../config/IConfigData";
-import {PlatformTools} from "../utils/PlatformTools";
+
+import {IConfigData} from "../../config/IConfigData";
+import {PlatformTools} from "../../utils/PlatformTools";
+import {IFileSupport} from "../IFileSupport";
 
 let XML:any;
 
-export class XmlConfigReader implements IConfigReader{
+export class XmlFileSupport implements IFileSupport{
 
     requirements():void {
         PlatformTools.load('x2js')

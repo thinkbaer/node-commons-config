@@ -1,0 +1,15 @@
+# commons-config
+
+configuration loading
+
+Features
+
+* modular
+* typescript
+* env
+* args
+* interploation
+* multiple directories and subdirectories
+* overriding
+* multiple file format support
+* include / exclude

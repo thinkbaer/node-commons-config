@@ -1,5 +1,5 @@
 
-export interface IConfigReaderInfo {
+export interface IFileSupportInfo {
     klass?:Function,
     ext?:string[],
     parseable:boolean,

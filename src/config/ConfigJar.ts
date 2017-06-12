@@ -1,42 +1,81 @@
-import {IConfigOptions} from "./IConfigOptions";
-import {ConfigReader} from "./ConfigReader";
-import {IConfigSource} from "./IConfigSource";
+import {IOptions} from "./IOptions";
+import {FileSupport} from "../filesupport/FileSupport";
+import {ISource} from "./ISource";
 import {IConfigData} from "./IConfigData";
-
-
-const DEFAULT_OPTIONS: IConfigOptions = {
+import {IConfigOptions} from "./IConfigOptions";
+import {IJarOptions} from "./IJarOptions";
+import {mergeDeep} from "typescript-object-utils";
+import {Utils} from "../utils/Utils";
+import {InterpolationSupport} from "../supports/InterpolationSupport";
+import {Config} from "./Config";
+/*
+const DEFAULT_OPTIONS: IOptions = {
     readerDirs: [__dirname + '/../reader/*'],
     interpolate:true,
     basename: 'default',
     dir: 'config'
 }
+*/
+
+const DEFAULT_JAR_OPTS : IJarOptions = {
+    namespace: 'default',
+    interpolate:true
+}
 
 export class ConfigJar {
 
-    private _options: IConfigOptions = DEFAULT_OPTIONS
+    private _options: IJarOptions;
 
     private _data: IConfigData = {}
 
-    private _source: IConfigSource[]
+    /**
+     *
+     */
+    private _source: ISource[]
 
-    constructor(options: IConfigOptions = {}) {
-        this.options(options)
+    constructor(options: IJarOptions = DEFAULT_JAR_OPTS) {
+        this._options = options
     }
 
-    loadFromFile(path: string) {
 
+    get namespace(){
+        return this._options.namespace
     }
 
-    loadFromString(content: string, type:string = 'json',namespace:string=null) {
-        let reader = ConfigReader.getReaderForExtension(type);
-        let json = reader.parse(content);
+
+    get data(){
+        return this._data
     }
 
-    private merge(data: IConfigData){
 
+    get(path:string):any{
+        return Utils.get(this._data,path)
     }
 
-    options(options: IConfigOptions) {
+    set(path:string, value:any):boolean{
+        return Utils.set(this._data,path,value)
+    }
+
+    merge(data: IConfigData){
+        if(this._options.interpolate){
+            // Interpolate first then merge
+            let collection:IConfigData[] = Config.jars
+            if(!Config.hasJar(this.namespace)){
+                collection.push(this._data)
+            }
+
+            InterpolationSupport.exec(data,collection)
+        }
+        this._data = Utils.merge(this._data, data)
+    }
+
+    interpolateAgainst(data:IConfigData){
+        InterpolationSupport.exec(data,this._data)
+        return data;
+    }
+
+    /*
+    options(options: IOptions) {
         if (options.readerDirs) {
 
             if (!this._options.readerDirs) {
@@ -56,7 +95,8 @@ export class ConfigJar {
 
         this._options = Object.assign(this._options, options)
 
-        ConfigReader.reload(this._options.readerDirs)
+        FileSupport.reload(this._options.readerDirs)
     }
+    */
 
 }

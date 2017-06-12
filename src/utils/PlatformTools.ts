@@ -56,8 +56,13 @@ export class PlatformTools {
     /**
      * Gets file extension. Does "path.extname".
      */
-    static pathExtname(pathStr: string): string {
-        return path.extname(pathStr);
+    static pathExtname(pathStr: string, dotted:boolean = true): string {
+        if(dotted){
+            return path.extname(pathStr);
+        }else{
+            return path.extname(pathStr).replace('.','');
+        }
+
     }
 
     /**
@@ -72,6 +77,27 @@ export class PlatformTools {
      */
     static fileExist(pathStr: string): boolean {
         return fs.existsSync(pathStr);
+    }
+
+    /**
+     * Returns the basename of a file
+     */
+    static basename(pathStr: string): string {
+        return path.basename(pathStr);
+    }
+
+    /**
+     * Returns the filename only (without extension)
+     */
+    static filename(pathStr: string): string {
+        return path.basename(pathStr).replace(new RegExp('\\.'+path.extname(pathStr).replace('.','')+'$'),'');
+    }
+
+    /**
+     * Returns the dirname of the file
+     */
+    static dirname(pathStr: string): string {
+        return path.dirname(pathStr);
     }
 
     /**

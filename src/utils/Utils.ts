@@ -1,5 +1,6 @@
 // import {merge, mergeDeep} from "typescript-object-utils";
 import * as merge from 'deepmerge'
+import {type} from "os";
 
 export class Utils {
 
@@ -12,6 +13,10 @@ export class Utils {
         return arr.filter((v, i, a) => a.indexOf(v) === i);
     }
 
+
+    static clone(obj: any){
+        return Utils.merge({},obj)
+    }
 
     static merge(...args: any[]): any {
         return merge.all(args)
@@ -29,13 +34,13 @@ export class Utils {
 
                 // Value is an array, call walk on each item in the array
                 if (Array.isArray(obj[key])) {
-                    obj[key].forEach((el:any, j:number) => {
+                    obj[key].forEach((el: any, j: number) => {
                         fn({
                             value: el,
-                            key: `${key}:${j}`,
+                            key: key,
                             index: j,
                             location: [...location, ...[key], ...[j]],
-                            parent:obj,
+                            parent: obj,
                             isLeaf: false
                         })
                         walk(el, [...location, ...[key], ...[j]])
@@ -47,7 +52,7 @@ export class Utils {
                         value: obj[key],
                         key: key,
                         parent: obj,
-                        index:null,
+                        index: null,
                         location: [...location, ...[key]],
                         isLeaf: false
                     })
@@ -57,9 +62,9 @@ export class Utils {
                 } else {
                     fn({
                         value: obj[key],
-                        key:key,
-                        parent:obj,
-                        index:null,
+                        key: key,
+                        parent: obj,
+                        index: null,
                         location: [...location, ...[key]],
                         isLeaf: true
                     })
@@ -70,18 +75,18 @@ export class Utils {
         walk(root)
     }
 
-    static get(arr:any, path:string = null):any{
-        if(path){
+    static get(arr: any, path: string = null): any {
+        if (path) {
             let paths = path.split('.')
-            let first:string|number = paths.shift()
-            if(/\d+/.test(first)){
+            let first: string | number = paths.shift()
+            if (/\d+/.test(first)) {
                 first = parseInt(first)
             }
-            if(arr.hasOwnProperty(first)){
-                let pointer:any = arr[first]
+            if (arr.hasOwnProperty(first)) {
+                let pointer: any = arr[first]
 
-                return Utils.get(pointer,paths.join('.'))
-            }else{
+                return Utils.get(pointer, paths.join('.'))
+            } else {
                 // not found
                 return null
             }
@@ -89,6 +94,71 @@ export class Utils {
         }
         return arr
 
+    }
+
+    static splitTyped(arr: string, sep: string = '.'): any[] {
+        let paths = arr.split('.')
+        let normPaths:any[] = []
+        paths.forEach(function(_x){
+            if (typeof _x === 'string' && /\d+/.test(_x)) {
+                normPaths.push(parseInt(_x))
+            }else{
+                normPaths.push(_x)
+            }
+
+        })
+        return normPaths
+    }
+
+    static set(arr: any, path: string | any[], value: any): boolean {
+        let paths = null
+        let first: string | number = null
+
+        if (typeof path === 'string') {
+            paths = Utils.splitTyped(path)
+        } else {
+            paths = path
+        }
+        first = paths.shift()
+        let next = paths.length > 0 ? paths[0] : null
+
+
+        if (!arr.hasOwnProperty(first)) {
+            // new, key doesn't exists
+            if (typeof next === 'number') {
+                // if next value is a number then this must be an array!
+                arr[first] = []
+            } else {
+                arr[first] = {}
+            }
+        } else {
+            if(Array.isArray(arr)){
+                if(!(typeof first === 'number')){
+                    return false
+                }
+            }else if (Array.isArray(arr[first])) {
+                if(!(typeof next === 'number')){
+                    return false
+                }
+            }else if (!(typeof arr[first] === 'object')) {
+                // primative
+                return false
+            }else {
+                if(typeof next === 'number'){
+                    // must be array
+                    if(!Array.isArray(arr[first])){
+                        return false
+                    }
+                }
+            }
+        }
+
+        if (paths.length > 0) {
+            return Utils.set(arr[first], paths, value)
+        } else {
+            arr[first] = value
+            return true
+        }
     }
 
 }
