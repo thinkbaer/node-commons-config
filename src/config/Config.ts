@@ -62,7 +62,7 @@ export class Config {
         let self = this
         let jars : IConfigData[]= []
         Object.keys(this.$jars).forEach(k => {
-            jars.push(self[k].data)
+            jars.push(self.$jars[k].data)
         })
         return jars
     }

@@ -32,7 +32,7 @@ export class ConfigJar {
     /**
      *
      */
-    private _source: Source[]
+    private _source: Source[] = []
 
     constructor(options: IJarOptions = DEFAULT_JAR_OPTS) {
         this._options = Utils.merge(DEFAULT_JAR_OPTS,options)
