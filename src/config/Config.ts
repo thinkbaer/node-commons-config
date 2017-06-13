@@ -6,6 +6,7 @@ import {ConfigJar} from "./ConfigJar";
 import {IOptions} from "./IOptions";
 import {IConfigOptions} from "./IConfigOptions";
 import {IJarOptions} from "./IJarOptions";
+import {IConfigData} from "./IConfigData";
 
 
 const DEFAULT_OPTIONS:IOptions = {
@@ -24,7 +25,7 @@ export class Config {
     private constructor(){}
 
 
-    static jar(name:string, jar?:ConfigJar|IJarOptions):ConfigJar{
+    static jar(name:string = 'default', jar?:ConfigJar|IJarOptions):ConfigJar{
 
         if(this.$jars[name] && !jar){
             return this.$jars[name]
@@ -53,6 +54,15 @@ export class Config {
         let jars : ConfigJar[]= []
         Object.keys(this.$jars).forEach(k => {
             jars.push(self[k])
+        })
+        return jars
+    }
+
+    static get jarsData() : IConfigData[]{
+        let self = this
+        let jars : IConfigData[]= []
+        Object.keys(this.$jars).forEach(k => {
+            jars.push(self[k].data)
         })
         return jars
     }

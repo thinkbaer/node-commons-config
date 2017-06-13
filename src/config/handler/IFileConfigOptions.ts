@@ -1,23 +1,6 @@
 
 import {IConfigOptions} from "../IConfigOptions";
-
-export interface IFilePath {
-    /**
-     * Directory path where filename
-     */
-    dirname?: string
-
-    /**
-     * Filename without extension
-     */
-    filename?: string
-
-    /**
-     * Typ of file (optional)
-     */
-    type?: string
-}
-
+import {IFilePath} from "./IFilePath";
 
 export interface IFileConfigOptions extends IConfigOptions {
 

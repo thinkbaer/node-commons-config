@@ -1,5 +1,5 @@
 
 export interface IJarOptions {
-    namespace: string
+    namespace?: string
     [k:string]:any
 }

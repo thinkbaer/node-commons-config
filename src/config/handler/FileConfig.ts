@@ -1,20 +1,17 @@
 import * as fs from 'fs';
-import {IConfigSupport} from "../IConfigSupport";
 
+import {IConfigSupport} from "../IConfigSupport";
 import {ConfigJar} from "../ConfigJar";
-import {IFileConfigOptions, IFilePath} from "./IFileConfigOptions";
+import {IFileConfigOptions} from "./IFileConfigOptions";
 import {FileSupport} from "../../filesupport/FileSupport";
 import {PlatformTools} from "../../utils/PlatformTools";
 import {IConfigData} from "../IConfigData";
-
 import {SystemConfig} from "./SystemConfig";
 import {Config} from "../Config";
 
+import {IFilePath} from "./IFilePath";
+import {FileSource} from "./FileSource";
 
-interface IFileSource {
-    file:IFilePath
-    data:IConfigData
-}
 
 /**
  * Read configuration from file
@@ -66,10 +63,9 @@ export class FileConfig implements IConfigSupport {
 
     }
 
-    private readFiles(paths:IFilePath[]): IFileSource[] {
+    private readFiles(paths:IFilePath[]): FileSource[] {
         let self = this
-        let _supportedTypes = FileSupport.getSupportedTypes()
-        let collection:IFileSource[] = []
+        let collection:FileSource[] = []
 
         paths.forEach((path, index) => {
             let data = self.readFile(path)
@@ -77,10 +73,9 @@ export class FileConfig implements IConfigSupport {
                 // TODO make this configurable
                 throw new Error('base file doesn\'t exists')
             }else if(data){
-
-                collection.push({data:data, file:path})
+                let source = new FileSource({data:data, file:path})
+                collection.push(source)
             }
-
         })
 
         return collection;
@@ -98,11 +93,11 @@ export class FileConfig implements IConfigSupport {
         } else {
             file = path
             file.dirname = PlatformTools.pathNormilize(PlatformTools.pathResolve(file.dirname))
-
             // TODO check if extension is falsely set in filename
         }
         return file
     }
+
 
     private attachPatternFiles(basefile:IFilePath, options?: IFileConfigOptions): IFilePath[]{
 
@@ -119,7 +114,6 @@ export class FileConfig implements IConfigSupport {
                 Config.jar('system').interpolateAgainst(options)
             }
 
-
             options.pattern.forEach(pattern => {
                 // TODO works only in posix systems!
                 let subfile : IFilePath = null;
@@ -131,11 +125,11 @@ export class FileConfig implements IConfigSupport {
                 }
                 files.push(subfile)
             })
-
         }
 
         return files
     }
+
 
     bootstrap(options?: IFileConfigOptions): ConfigJar {
         if(!options.namespace){
@@ -155,7 +149,7 @@ export class FileConfig implements IConfigSupport {
         let jar = Config.jar(options.namespace)
 
         sources.forEach(_source => {
-            jar.merge(_source.data)
+            jar.merge(_source)
         })
         return jar
     }

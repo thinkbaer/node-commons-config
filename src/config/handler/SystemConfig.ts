@@ -5,6 +5,7 @@ import {mergeDeep} from "typescript-object-utils";
 import {ConfigJar} from "../ConfigJar";
 import {IConfigOptions} from "../IConfigOptions";
 import {Config} from "../Config";
+import {Source} from "../Source";
 
 
 /**
@@ -13,66 +14,69 @@ import {Config} from "../Config";
  * Named arguments beginning with '--' will be stripped of '--' and put as key-value pair in the array.
  * If no value is set then the value will be 'true'.
  */
-export class SystemConfig implements IConfigSupport{
+export class SystemConfig implements IConfigSupport {
 
-    type():string {
+    type(): string {
         return 'system';
     }
 
-    private attach_os(jar:ConfigJar){
+    private attach_os(jar: ConfigJar) {
 
-        jar.set('os.hostname',os.hostname())
-        jar.set('os.userdir',os.homedir())
-        jar.set('os.platform',os.platform())
+        let _os = {
+            hostname: os.hostname(),
+            userdir: os.homedir(),
+            platform: os.platform(),
+        }
 
+        jar.merge(new Source({source: 'os', data: {os: _os}}))
         return jar
     }
 
-    private attach_env(jar:ConfigJar){
+    private attach_env(jar: ConfigJar) {
 
-        let data = mergeDeep({},process.env)
-        let configData : IConfigData = {}
+        let data = mergeDeep({}, process.env)
+        let configData: IConfigData = {}
         Object.keys(data).forEach(k => {
             configData[k.toLocaleLowerCase()] = data[k]
         })
-        jar.merge({env:configData})
+        jar.merge(new Source({source: 'env', data: {env: configData}}))
 
         return jar
     }
 
-    private attach_argv(jar:ConfigJar){
-        let data : IConfigData = {}
-        let i=0
+    private attach_argv(jar: ConfigJar) {
+        let data: IConfigData = {}
+        let i = 0
         let pl = process.argv.length
 
-        for(let k=0;k<pl;k++){
+        for (let k = 0; k < pl; k++) {
             let v = process.argv[k]
-            if(/^\-\-/.test(v)){
+            if (/^\-\-/.test(v)) {
                 let n = k + 1
-                if(n < pl){
+                if (n < pl) {
                     let next = process.argv[n]
-                    if(!/^\-\-/.test(next)){
+                    if (!/^\-\-/.test(next)) {
                         k++
-                        data[v.replace(/^\-\-/,'')] = next
-                    }else{
-                        data[v.replace(/^\-\-/,'')] = true
+                        data[v.replace(/^\-\-/, '')] = next
+                    } else {
+                        data[v.replace(/^\-\-/, '')] = true
                     }
-                }else{
-                    data[v.replace(/^\-\-/,'')] = true
+                } else {
+                    data[v.replace(/^\-\-/, '')] = true
                 }
-            }else{
-                data['_'+i] = v
+            } else {
+                data['_' + i] = v
                 i++
             }
         }
 
-        jar.merge({argv:data})
+        jar.merge(new Source({source: 'argv', data: {argv: data}}))
 
         return jar
     }
 
 
-    bootstrap(options?:IConfigOptions):ConfigJar{
+    bootstrap(options?: IConfigOptions): ConfigJar {
         let jar = Config.jar('system')
         this.attach_os(jar)
         this.attach_env(jar)
