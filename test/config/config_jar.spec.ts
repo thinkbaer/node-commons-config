@@ -14,20 +14,21 @@ import {FileSupport} from "../../src/filesupport/FileSupport";
 
 
 
-@suite('ConfigJar')
+@suite('config/ConfigJar')
 class ConfigJarTests {
+
+    @test
+    static before(){
+        FileSupport.reload()
+    }
 
 
     @test
     'default initialization' (){
-        FileSupport.reset()
+
 
         let jar = new ConfigJar()
-        console.log(jar)
-
-        let supportedTypes = FileSupport.getSupportedTypes()
-        expect(supportedTypes,'xml reader doesn\'t exists').to.contain('xml')
-        expect(supportedTypes,'json reader doesn\'t exists').to.contain('json')
+        //console.log(jar)
 
     }
 

@@ -17,7 +17,10 @@ class FileSupportTests {
 
     @test
     'load predefined config reader' (){
-        let res = FileSupport.reload(__dirname+'/../../src/filesupport/types/*.ts')
+        //let res = FileSupport.reload(__dirname+'/../../src/filesupport/types/*.ts')
+
+        // Default
+        let res = FileSupport.reload()
         expect(res,'reloading of readers failed').to.be.true
 
         let supportedTypes = FileSupport.getSupportedTypes()

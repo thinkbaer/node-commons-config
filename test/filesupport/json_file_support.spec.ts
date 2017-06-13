@@ -6,9 +6,7 @@ describe('',()=>{})
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
 import {expect} from "chai";
 import {inspect} from "util";
-import {XmlFileSupport} from "../../src/filetypes/XmlFileSupport";
-import {JsonFileSupport} from "../../src/filetypes/JsonFileSupport";
-
+import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
 
 //import * as config from 'config';
 
