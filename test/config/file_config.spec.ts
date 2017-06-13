@@ -55,8 +55,6 @@ class FileConfigTests {
 
     @test
     'file input formats'() {
-
-
         let cfg = new FileConfig()
 
         // Direct file name
