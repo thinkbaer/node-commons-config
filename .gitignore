@@ -5,6 +5,7 @@
 /tmp
 /build
 /out-tsc
+/.nyc_output
 
 # dependencies
 /node_modules

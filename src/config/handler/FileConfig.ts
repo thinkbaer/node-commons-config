@@ -11,6 +11,7 @@ import {Config} from "../Config";
 
 import {IFilePath} from "./IFilePath";
 import {FileSource} from "./FileSource";
+import {inspect} from "util";
 
 
 /**
@@ -25,7 +26,6 @@ export class FileConfig implements IConfigSupport {
 
 
     private readFile(file:IFilePath):IConfigData{
-
         let supportedTypes = FileSupport.getSupportedTypes()
         let used_path = null
         let used_ext = null
@@ -108,7 +108,7 @@ export class FileConfig implements IConfigSupport {
             // if not globally definied then load directly
             if(!Config.hasJar('system')){
                 let system  = new SystemConfig()
-                let systemJar = system.bootstrap()
+                let systemJar = system.create()
                 systemJar.interpolateAgainst(options)
             }else{
                 Config.jar('system').interpolateAgainst(options)
@@ -131,7 +131,7 @@ export class FileConfig implements IConfigSupport {
     }
 
 
-    bootstrap(options?: IFileConfigOptions): ConfigJar {
+    create(options?: IFileConfigOptions): ConfigJar {
         if(!options.namespace){
             options.namespace = 'default'
         }

@@ -14,22 +14,14 @@ import {Utils} from "./Utils";
  */
 export class ClassLoader {
 
-
     static importClassesFromAny(o: StringOrFunction[]):Function[] {
-        let directories: string
         let klasses: Function[] = []
 
         o.forEach(x => {
             if (Utils.isString(x)) {
                 let _x = PlatformTools.pathNormilize(PlatformTools.pathResolve(<string>x))
-                if (_x.indexOf('*') !== -1) {
-                    // must be directory
                     let exported = this.importClassesFromDirectories([_x])
                     klasses = klasses.concat.apply(klasses,exported)
-                } else {
-                    // must be file
-                    this.loadFileClasses( PlatformTools.load(PlatformTools.pathResolve(_x)), klasses)
-                }
             } else if (x instanceof Function) {
                 klasses.push(x)
             } else {

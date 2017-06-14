@@ -76,7 +76,7 @@ export class SystemConfig implements IConfigSupport {
     }
 
 
-    bootstrap(options?: IConfigOptions): ConfigJar {
+    create(options?: IConfigOptions): ConfigJar {
         let jar = Config.jar('system')
         this.attach_os(jar)
         this.attach_env(jar)

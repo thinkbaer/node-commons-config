@@ -20,7 +20,7 @@ class SystemConfigTests {
         process.argv.push('--hallo','welt')
         process.argv.push('--hallo_welt','--welt_hallo')
         let cfg = new SystemConfig()
-        let jar = cfg.bootstrap()
+        let jar = cfg.create()
         expect(jar.get('argv.hallo')).to.eq('welt')
         expect(jar.get('argv.hallo_welt')).to.be.true
         expect(jar.get('os.hostname')).to.exist

@@ -7,9 +7,14 @@ import {IFileSupport} from "./IFileSupport";
 import {StringOrFunction} from "../types";
 import {JsonFileSupport} from "./types/JsonFileSupport";
 import {XmlFileSupport} from "./types/XmlFileSupport";
+import {YamlFileSupport} from "./types/YamlFileSupport";
 
 
-const DEFAULT_TYPES = [JsonFileSupport, XmlFileSupport]
+export const DEFAULT_TYPES:StringOrFunction[] = [
+    JsonFileSupport,
+    YamlFileSupport,
+    XmlFileSupport
+]
 
 /**
  * FileSupport

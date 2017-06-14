@@ -9,6 +9,6 @@ export interface IConfigSupport {
 
     type() : string
 
-    bootstrap(options? : IConfigOptions) : ConfigJar;
+    create(options? : IConfigOptions) : ConfigJar;
 
 }
