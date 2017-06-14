@@ -140,9 +140,11 @@ export class Utils {
                 if(!(typeof next === 'number')){
                     return false
                 }
-            }else if (!(typeof arr[first] === 'object')) {
+            }else if (!Utils.isObject(arr[first])) {
                 // primative
-                return false
+                if(Utils.isObject(value)){
+                    return false
+                }
             }else {
                 if(typeof next === 'number'){
                     // must be array
@@ -159,6 +161,16 @@ export class Utils {
             arr[first] = value
             return true
         }
+    }
+
+
+    static isObject(o:any){
+        return typeof o === 'object'
+    }
+
+
+    static isString(o:any){
+        return typeof o === 'string'
     }
 
 }

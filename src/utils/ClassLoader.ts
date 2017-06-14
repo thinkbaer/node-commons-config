@@ -6,25 +6,55 @@
 
 
 import {PlatformTools} from "./PlatformTools";
+import {StringOrFunction} from "../types";
+import {Utils} from "./Utils";
+
 /**
  * Loads all exported classes from the given directory.
  */
 export class ClassLoader {
 
-    static importClassesFromDirectories(directories: string[], formats = [".js", ".ts"]): Function[] {
-        function loadFileClasses(exported: any, allLoaded: Function[]) {
-            if (exported instanceof Function) {
-                allLoaded.push(exported);
 
-            } else if (exported instanceof Object) {
-                Object.keys(exported).forEach(key => loadFileClasses(exported[key], allLoaded));
+    static importClassesFromAny(o: StringOrFunction[]):Function[] {
+        let directories: string
+        let klasses: Function[] = []
 
-            } else if (exported instanceof Array) {
-                exported.forEach((i: any) => loadFileClasses(i, allLoaded));
+        o.forEach(x => {
+            if (Utils.isString(x)) {
+                let _x = PlatformTools.pathNormilize(PlatformTools.pathResolve(<string>x))
+                if (_x.indexOf('*') !== -1) {
+                    // must be directory
+                    let exported = this.importClassesFromDirectories([_x])
+                    klasses = klasses.concat.apply(klasses,exported)
+                } else {
+                    // must be file
+                    this.loadFileClasses( PlatformTools.load(PlatformTools.pathResolve(_x)), klasses)
+                }
+            } else if (x instanceof Function) {
+                klasses.push(x)
+            } else {
+                throw new Error('TODO: unknown '+x)
             }
+        })
+        return klasses
+    }
 
-            return allLoaded;
+    private static loadFileClasses(exported: any, allLoaded: Function[]) {
+        if (exported instanceof Function) {
+            allLoaded.push(exported);
+
+        } else if (exported instanceof Object) {
+            Object.keys(exported).forEach(key => this.loadFileClasses(exported[key], allLoaded));
+
+        } else if (exported instanceof Array) {
+            exported.forEach((i: any) => this.loadFileClasses(i, allLoaded));
         }
+
+        return allLoaded;
+    }
+
+    static importClassesFromDirectories(directories: string[], formats = [".js", ".ts"]): Function[] {
+
 
         const allFiles = directories.reduce((allDirs, dir) => {
             let x = PlatformTools.pathNormilize(dir)
@@ -39,7 +69,7 @@ export class ClassLoader {
             })
             .map(file => PlatformTools.load(PlatformTools.pathResolve(file)));
 
-        return loadFileClasses(dirs, []);
+        return this.loadFileClasses(dirs, []);
     }
 
 

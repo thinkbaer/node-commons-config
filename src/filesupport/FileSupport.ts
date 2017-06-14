@@ -4,6 +4,12 @@ import {ClassLoader} from "../utils/ClassLoader";
 import {Utils} from "../utils/Utils";
 import {IFileSupportInfo} from "./IFileSupportInfo";
 import {IFileSupport} from "./IFileSupport";
+import {StringOrFunction} from "../types";
+import {JsonFileSupport} from "./types/JsonFileSupport";
+import {XmlFileSupport} from "./types/XmlFileSupport";
+
+
+const DEFAULT_TYPES = [JsonFileSupport, XmlFileSupport]
 
 /**
  * FileSupport
@@ -18,13 +24,13 @@ export class FileSupport {
      *
      * @param directories
      */
-    static reload(directories: string | string[] = [__dirname + '/types/*']): boolean {
+    static reload(directories: StringOrFunction | StringOrFunction[] = DEFAULT_TYPES): boolean {
         FileSupport.reset()
 
-        if (typeof directories === 'string') {
+        if (!Array.isArray(directories)) {
             directories = [directories]
         }
-        let classes = ClassLoader.importClassesFromDirectories(directories);
+        let classes = ClassLoader.importClassesFromAny(directories);
 
         classes.forEach((klass: Function) => {
 

@@ -30,14 +30,24 @@ class ConfigJarTests {
     }
 
     @test
-    'create jar' (){
+    'functional' (){
         let data = {x:1,y:{y1:'test',y2:3},z:['x=${x}',2,3]}
         let clone = Utils.clone(data)
+
+        // construct
         let jar = new ConfigJar()
         expect(jar['_options']['namespace']).to.eq('default')
+        expect(jar.namespace).to.eq('default')
 
+
+        // merge
         jar.merge(data)
         expect(jar.data).to.deep.eq(clone)
+
+        // set
+        let done = jar.set('x',2)
+        expect(done).to.be.true
+        expect(jar.get('x')).to.eq(2)
     }
 
     @test

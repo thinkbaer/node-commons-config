@@ -2,32 +2,27 @@
 
 
 import {IConfigOptions} from "./IConfigOptions";
+import {StringOrFunction} from "../types";
+
+
+
+
 export interface IOptions {
-    /**
-     * Root configuration directory
-     */
-    dir?:string
-
-    /**
-     * Basename of root configuration name
-     */
-    basename?:string
 
     /**
      * Directories with implementiations of IConfigReader
      */
-    readerDirs?:string[],
+    handlers?: StringOrFunction[],
 
     /**
-     * Directories with implementiations of IConfigReader
+     * Directories|Files|Classes with implementiations of IFileSupport
      */
-    fileSupportsDirs?:string[],
+    fileSupport?:StringOrFunction[],
 
     /**
      * Enable interpolation support
      */
     interpolate?:boolean
-
 
     /**
      *  Configurations

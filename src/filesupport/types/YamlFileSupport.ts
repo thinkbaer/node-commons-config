@@ -37,7 +37,7 @@ export class YamlFileSupport implements IFileSupport {
         return cfg;
     }
 
-    static stripYamlComments (fileStr:string) {
+    private static stripYamlComments (fileStr:string) {
         // First replace removes comment-only lines
         // Second replace removes blank lines
         return fileStr.replace(/^\s*#.*/mg,'').replace(/^\s*[\n|\r]+/mg,'');

@@ -14,11 +14,8 @@ import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
 @suite('filesupport/FileSupport')
 class FileSupportTests {
 
-
     @test
-    'load predefined config reader' (){
-        //let res = FileSupport.reload(__dirname+'/../../src/filesupport/types/*.ts')
-
+    'load predefined types' (){
         // Default
         let res = FileSupport.reload()
         expect(res,'reloading of readers failed').to.be.true
@@ -31,8 +28,9 @@ class FileSupportTests {
         expect(readerCount,'no reader found').to.greaterThan(0)
     }
 
+
     @test
-    'get reader for special type' (){
+    'get type for special type' (){
         let res = FileSupport.reload(__dirname+'/../../src/filesupport/types/*.ts')
         expect(res,'reloading of readers failed').to.be.true
 
