@@ -21,8 +21,6 @@ class FileConfigTests {
     }
 
 
-
-
     @test
     'pattern'() {
         let system = new SystemConfig()

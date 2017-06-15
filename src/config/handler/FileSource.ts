@@ -9,4 +9,9 @@ export class FileSource extends Source{
 
     file:IFilePath
 
+
+    constructor(opts:any){
+        super({...opts,source:'file'})
+    }
+
 }

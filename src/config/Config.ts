@@ -25,18 +25,19 @@ export class Config {
 
     private static $self:Config = null
 
-    private $options: IOptions = null;
+    private $options: IOptions = {};
 
     private $jars: { [k: string]: ConfigJar } = {};
 
 
     private constructor() {
-        this.$options = DEFAULT_OPTIONS
+
     }
 
     static instance(): Config {
         if(!this.$self){
             this.$self = new Config()
+            this.$self._options(DEFAULT_OPTIONS)
         }
         return this.$self
     }
@@ -75,7 +76,7 @@ export class Config {
         let self = this
         let jars: ConfigJar[] = []
         Object.keys(this.$jars).forEach(k => {
-            jars.push(self[k])
+            jars.push(self.$jars[k])
         })
         return jars
     }
@@ -110,6 +111,8 @@ export class Config {
         if(append){
             this.$options = Utils.merge(this.$options, options)
         }else{
+            // clear current jars
+            this.$jars = {}
             Object.assign(this.$options,options)
         }
 
