@@ -1,8 +1,11 @@
 
-@TASK 170614
-Config impl+test load config handler and check loading by configuration throw parameter or commons-config.json
+[.line-through]#@TASK 170614# +
+Config impl+test load config handler and check loading by configuration through parameter
 
-@TASK 170614
+@TASK 170614 +
 DirectoryConfig impl
 
+@TASK 170614 +
+Use predefined configuration options from ./commons-config.json as default or merge them with
+the default parameter. If a programmatical usage isn't wished.
 

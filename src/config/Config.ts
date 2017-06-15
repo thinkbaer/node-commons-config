@@ -42,6 +42,8 @@ export class Config {
         return this.$self
     }
 
+
+
     static jar(name: string = 'default', jar?: ConfigJar | IJarOptions): ConfigJar {
         return this.instance()._jar(name,jar)
     }
