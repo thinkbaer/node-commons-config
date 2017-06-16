@@ -1,25 +1,24 @@
-
 import {ClassLoader} from "../utils/ClassLoader";
 
 import {Utils} from "../utils/Utils";
 import {IFileSupportInfo} from "./IFileSupportInfo";
 import {IFileSupport} from "./IFileSupport";
 import {StringOrFunction} from "../types";
+
 import {JsonFileSupport} from "./types/JsonFileSupport";
 import {XmlFileSupport} from "./types/XmlFileSupport";
 import {YamlFileSupport} from "./types/YamlFileSupport";
 
 
-export const DEFAULT_TYPES:StringOrFunction[] = [
-    JsonFileSupport,
-    YamlFileSupport,
-    XmlFileSupport
-]
-
 /**
  * FileSupport
  */
 export class FileSupport {
+    static DEFAULT_TYPES: StringOrFunction[] = [
+        JsonFileSupport,
+        YamlFileSupport,
+        XmlFileSupport
+    ]
 
     private static $supports: IFileSupportInfo[] = [];
 
@@ -29,8 +28,8 @@ export class FileSupport {
      *
      * @param directories
      */
-    static reload(directories: StringOrFunction | StringOrFunction[] = DEFAULT_TYPES): boolean {
-        FileSupport.reset()
+    static reload(directories: StringOrFunction | StringOrFunction[] = this.DEFAULT_TYPES): boolean {
+        this.reset()
 
         if (!Array.isArray(directories)) {
             directories = [directories]
@@ -110,7 +109,7 @@ export class FileSupport {
 
     static getSupportByExtension(ext: string): IFileSupport {
         let info = FileSupport.getInfoByExtension(ext)
-        if(info){
+        if (info) {
             return Reflect.construct(info.klass, [])
         }
         return null

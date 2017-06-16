@@ -6,12 +6,13 @@ import {IFileConfigOptions} from "./IFileConfigOptions";
 import {FileSupport} from "../../filesupport/FileSupport";
 import {PlatformTools} from "../../utils/PlatformTools";
 import {IConfigData} from "../IConfigData";
-import {SystemConfig} from "./SystemConfig";
+
 import {Config} from "../Config";
 
 import {IFilePath} from "./IFilePath";
 import {FileSource} from "./FileSource";
-import {inspect} from "util";
+import {SystemConfig} from "./";
+
 
 
 /**
@@ -132,10 +133,6 @@ export class FileConfig implements IConfigSupport {
 
 
     create(options?: IFileConfigOptions): ConfigJar {
-        if(!options.namespace){
-            options.namespace = 'default'
-        }
-
         let files: IFilePath[] = []
         let basefile = this.explodeFilePath(options.file)
         files.push(basefile)
@@ -146,7 +143,7 @@ export class FileConfig implements IConfigSupport {
         }
 
         let sources = this.readFiles(files)
-        let jar = Config.jar(options.namespace)
+        let jar = ConfigJar.create({namespace: options.namespace})
 
         sources.forEach(_source => {
             jar.merge(_source)

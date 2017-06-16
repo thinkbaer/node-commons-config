@@ -12,26 +12,28 @@ import {IConfigData} from "../../src/config/IConfigData";
 import {Config} from "../../src/config/Config";
 import {IFileConfigOptions} from "../../src/config/handler/IFileConfigOptions";
 import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
+import {PlatformTools} from "../../src/utils/PlatformTools";
 
+const SUBTESTPATH:string = 'testfolders/file/config'
 
-@suite('config/Config with file options')
+@suite('config/handler/FileConfig loaded by Config.options')
 class FileConfigTests {
 
 
     @test
-    'config by options'() {
+    'load by options'() {
         // config
         Config['$self'] = null
         Config.options({
             configs: [
                 <IFileConfigOptions>{
                     type: 'file',
-                    file: './test/config/testfolder_file/config/default.json'
+                    file: `./test/${SUBTESTPATH}/default.json`
                 }
             ]
         })
 
-        let opts = Config.instance()['$options']
+        let opts = Config.instance()[ '$options' ]
         expect(opts.configs.length).to.eq(1)
         expect(opts.handlers.length).to.eq(2)
         expect(opts.fileSupport.length).to.eq(3)
@@ -45,7 +47,7 @@ class FileConfigTests {
             configs: [<IFileConfigOptions>{
                 namespace: 'other',
                 type: 'file',
-                file: './test/config/testfolder_file/config/default.json'
+                file: `./test/${SUBTESTPATH}/default.json`
             }]
 
         })
@@ -63,7 +65,7 @@ class FileConfigTests {
             configs: [<IFileConfigOptions>{
                 namespace: 'other',
                 type: 'file',
-                file: './test/config/testfolder_file/config/default.json'
+                file: `./test/${SUBTESTPATH}/default.json`
             }]
 
         }, false)
@@ -82,7 +84,7 @@ class FileConfigTests {
                 namespace: 'other',
                 type: 'file',
                 file: {
-                    dirname: './test/config/testfolder_file/config',
+                    dirname: `./test/${SUBTESTPATH}`,
                     filename: 'default'
                 }
             }]
@@ -99,7 +101,7 @@ class FileConfigTests {
 
         expect(first_key).to.eq('other')
         expect(jars[first_key]['_source'][0].source).to.eq('file')
-        expect(jars[first_key]['_source'][0]['file'].dirname).to.eq(__dirname + '/testfolder_file/config')
+        expect(jars[first_key]['_source'][0]['file'].dirname).to.eq(PlatformTools.pathNormilize(__dirname + `/../${SUBTESTPATH}`))
         expect(jars[first_key]['_source'][0]['file'].filename).to.eq('default')
         expect(jars[first_key]['_source'][0]['file'].type).to.eq('json')
 
@@ -110,8 +112,13 @@ class FileConfigTests {
         process.env.hostname = 'testhost'
         process.env.stage = 'testing'
         Config.options({
-            handlers: ['./src/config/handler/FileConfig.ts','./src/config/handler/SystemConfig.ts'],
-            fileSupport: [JsonFileSupport],
+            handlers: [
+                './src/config/handler/FileConfig.ts',
+                './src/config/handler/SystemConfig.ts'
+            ],
+            fileSupport: [
+                JsonFileSupport
+            ],
             configs: [
                 {
                     type: 'system'
@@ -120,7 +127,7 @@ class FileConfigTests {
                     namespace: 'other',
                     type: 'file',
                     file: {
-                        dirname: './test/config/testfolder_file/config',
+                        dirname: `./test/${SUBTESTPATH}`,
                         filename: 'default'
                     },
                     pattern: [

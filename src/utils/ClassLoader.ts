@@ -15,12 +15,13 @@ import {Utils} from "./Utils";
 export class ClassLoader {
 
     static importClassesFromAny(o: StringOrFunction[]):Function[] {
+
         let klasses: Function[] = []
 
         o.forEach(x => {
             if (Utils.isString(x)) {
                 let _x = PlatformTools.pathNormilize(PlatformTools.pathResolve(<string>x))
-                    let exported = this.importClassesFromDirectories([_x])
+                    let exported = ClassLoader.importClassesFromDirectories([_x])
                     klasses = klasses.concat.apply(klasses,exported)
             } else if (x instanceof Function) {
                 klasses.push(x)
@@ -46,7 +47,6 @@ export class ClassLoader {
     }
 
     static importClassesFromDirectories(directories: string[], formats = [".js", ".ts"]): Function[] {
-
 
         const allFiles = directories.reduce((allDirs, dir) => {
             let x = PlatformTools.pathNormilize(dir)

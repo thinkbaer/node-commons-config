@@ -1,11 +1,11 @@
 import * as os from 'os'
+
 import {IConfigSupport} from "../IConfigSupport";
 import {IConfigData} from "../IConfigData";
-import {mergeDeep} from "typescript-object-utils";
 import {ConfigJar} from "../ConfigJar";
 import {IConfigOptions} from "../IConfigOptions";
-import {Config} from "../Config";
 import {Source} from "../Source";
+import {Utils} from "../../utils/Utils";
 
 
 /**
@@ -14,7 +14,7 @@ import {Source} from "../Source";
  * Named arguments beginning with '--' will be stripped of '--' and put as key-value pair in the array.
  * If no value is set then the value will be 'true'.
  */
-export class SystemConfig implements IConfigSupport {
+export  class SystemConfig implements IConfigSupport {
 
     type(): string {
         return 'system';
@@ -34,7 +34,7 @@ export class SystemConfig implements IConfigSupport {
 
     private attach_env(jar: ConfigJar) {
 
-        let data = mergeDeep({}, process.env)
+        let data = Utils.merge({}, process.env)
         let configData: IConfigData = {}
         Object.keys(data).forEach(k => {
             configData[k.toLocaleLowerCase()] = data[k]
@@ -77,7 +77,7 @@ export class SystemConfig implements IConfigSupport {
 
 
     create(options?: IConfigOptions): ConfigJar {
-        let jar = Config.jar('system')
+        let jar = ConfigJar.create({namespace:'system'})
         this.attach_os(jar)
         this.attach_env(jar)
         this.attach_argv(jar)

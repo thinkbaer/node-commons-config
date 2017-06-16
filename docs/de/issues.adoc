@@ -1,11 +1,29 @@
 
-[.line-through]#@TASK 170614# +
-Config impl+test load config handler and check loading by configuration through parameter
 
-@TASK 170614 +
+@TASK#5 170616 +patch +
+Write tests for SystemConfig initialization by config options. Name: system_config_init.spec.ts.
+
+
+@TASK#4 170615 0.4.0 +
+File supports for
+- js
+- ts
+- properties
+- json5
+- hjson
+- toml
+- coffee
+- iced
+- cson
+
+
+
+@TASK#3 170614 0.3.0 +
 DirectoryConfig impl
 
-@TASK 170614 +
+@TASK#2 170614 +
 Use predefined configuration options from ./commons-config.json as default or merge them with
 the default parameter. If a programmatical usage isn't wished.
 
+[.line-through]#@TASK#1 170614# +
+Config impl+test load config handler and check loading by configuration through parameter

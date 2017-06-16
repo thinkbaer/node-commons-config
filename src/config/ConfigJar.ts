@@ -20,12 +20,15 @@ const DEFAULT_OPTIONS: IOptions = {
 
 const DEFAULT_JAR_OPTS : IJarOptions = {
     namespace: 'default',
+    standalone:false,
     interpolate:true
 }
 
 export class ConfigJar {
 
     private _options: IJarOptions;
+
+    // private _config:
 
     private _data: IConfigData = {}
 
@@ -54,7 +57,7 @@ export class ConfigJar {
         return Utils.set(this._data,path,value)
     }
 
-    merge(data: IConfigData|Source){
+    merge(data: IConfigData|Source, opts:{interpolate:boolean} = {interpolate:true}){
 
         let source = data
         if(data instanceof Source){
@@ -63,7 +66,7 @@ export class ConfigJar {
             data = (<Source>source).data
         }
 
-        if(this._options.interpolate){
+        if(this._options.interpolate && opts.interpolate){
             // interpolate first then merge
             let collection:IConfigData[] = Config.jarsData
 
@@ -74,6 +77,7 @@ export class ConfigJar {
             collection.unshift(data)
             InterpolationSupport.exec(data,collection)
         }
+
         this._data = Utils.merge(this._data, data)
     }
 
@@ -87,6 +91,14 @@ export class ConfigJar {
     interpolateAgainst(data:IConfigData){
         InterpolationSupport.exec(data,this._data)
         return data;
+    }
+
+    static create(options:IJarOptions = {namespace:'default'}):ConfigJar{
+        if(!options.namespace){
+            options.namespace = 'default'
+        }
+        let jar = new ConfigJar(options)
+        return jar
     }
 
 }

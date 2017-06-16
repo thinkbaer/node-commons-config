@@ -1,18 +1,17 @@
-import {ConfigJar} from "./ConfigJar";
-import {IOptions} from "./IOptions";
-import {IJarOptions} from "./IJarOptions";
-import {IConfigData} from "./IConfigData";
 import {Utils} from "../utils/Utils";
 
-import {DEFAULT_TYPES, FileSupport} from "../filesupport/FileSupport";
-
-import {ConfigHandler, DEFAULT_HANDLER} from "./ConfigHandler";
+import {ConfigJar} from "./ConfigJar";
+import {IOptions} from "./IOptions";
+import {IConfigData} from "./IConfigData";
 import {IConfigSupport} from "./IConfigSupport";
 
+import {ConfigHandler} from "./ConfigHandler";
+import {FileSupport} from "../filesupport/FileSupport";
 
-const DEFAULT_OPTIONS : IOptions = {
-    fileSupport: DEFAULT_TYPES,
-    handlers: DEFAULT_HANDLER,
+
+const DEFAULT_OPTIONS: IOptions = {
+    fileSupport: FileSupport.DEFAULT_TYPES,
+    // handlers: {}DEFAULT_HANDLER,
     configs: [
         {
             type: 'system'
@@ -23,55 +22,58 @@ const DEFAULT_OPTIONS : IOptions = {
 
 export class Config {
 
-    private static $self:Config = null
+    private static $self: Config = null
 
     private $options: IOptions = {};
 
     private $jars: { [k: string]: ConfigJar } = {};
+
+    private $init: boolean = false
 
 
     private constructor() {
 
     }
 
-    static instance(): Config {
-        if(!this.$self){
+    static instance(init: boolean = true): Config {
+        if (!this.$self) {
             this.$self = new Config()
+        }
+
+        if (!this.$self.isInitialized() && init) {
             this.$self._options(DEFAULT_OPTIONS)
         }
+
         return this.$self
     }
 
-
-
-    static jar(name: string = 'default', jar?: ConfigJar | IJarOptions): ConfigJar {
-        return this.instance()._jar(name,jar)
+    isInitialized() {
+        return this.$init
     }
 
-    _jar(name: string = 'default', jar?: ConfigJar | IJarOptions): ConfigJar {
+
+    static jar(name: string = 'default', jar?: ConfigJar): ConfigJar {
+        return this.instance(false)._jar(name, jar)
+    }
+
+    _jar(name: string = 'default', jar?: ConfigJar, override: boolean = false): ConfigJar {
         if (this.$jars[name] && !jar) {
-            return this.$jars[name]
         } else if (this.$jars[name] && jar) {
-            throw new Error('config jar is already set')
-        } else if (!this.$jars[name] && jar) {
-            if (jar instanceof ConfigJar) {
-                this.$jars[name] = jar
-            } else {
-                if (!jar.namespace) {
-                    jar.namespace = name
-                }
-                this.$jars[name] = new ConfigJar(jar)
+            if (!override) {
+                throw new Error('config jar is already set')
             }
-            return this.$jars[name]
+            this.$jars[name] = jar
+        } else if (!this.$jars[name] && jar) {
+            this.$jars[name] = jar
         } else {
-            let jar = new ConfigJar({namespace: name})
-            return this._jar(jar.namespace, jar)
+            this.$jars[name] = ConfigJar.create({namespace: name})
         }
+        return this.$jars[name]
     }
 
     // TODO return immutable
     static get jars(): ConfigJar[] {
-        return this.instance()._jars
+        return this.instance(false)._jars
     }
 
     get _jars(): ConfigJar[] {
@@ -84,7 +86,7 @@ export class Config {
     }
 
     static get jarsData(): IConfigData[] {
-        return this.instance()._jarsData
+        return this.instance(false)._jarsData
     }
 
     get _jarsData(): IConfigData[] {
@@ -98,7 +100,7 @@ export class Config {
 
 
     static hasJar(name: string): boolean {
-        return this.instance()._hasJar(name)
+        return this.instance(false)._hasJar(name)
     }
 
     _hasJar(name: string): boolean {
@@ -109,27 +111,32 @@ export class Config {
         this.instance()._options(options, append)
     }
 
+
     _options(options: IOptions = {}, append: boolean = true) {
-        if(append){
+        this.$init = true
+
+        if (append) {
             this.$options = Utils.merge(this.$options, options)
-        }else{
+        } else {
             // clear current jars
             this.$jars = {}
-            Object.assign(this.$options,options)
+            Object.assign(this.$options, options)
         }
 
         if (this.$options.fileSupport) {
             FileSupport.reload(this.$options.fileSupport)
         }
 
-        if (this.$options.handlers) {
-            ConfigHandler.reload(this.$options.handlers)
+        if (!this.$options.handlers || this.$options.handlers.length === 0) {
+            this.$options.handlers = ConfigHandler.DEFAULT_HANDLER
         }
+        ConfigHandler.reload(this.$options.handlers)
 
         this.$options.configs.forEach(_config => {
             let handler: IConfigSupport = ConfigHandler.getHandlerByType(_config.type)
             if (handler) {
-                handler.create(_config)
+                let jar: ConfigJar = handler.create(_config)
+                this._jar(jar.namespace, jar, true)
             } else {
                 throw new Error('handler doesn\'t exists')
             }

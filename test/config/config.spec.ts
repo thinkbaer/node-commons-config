@@ -6,9 +6,9 @@ describe('', () => {
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
 import {expect} from "chai";
 import * as os from 'os'
+import {inspect} from 'util'
 import {Config} from "../../src/config/Config";
 import {ConfigJar} from "../../src/config/ConfigJar";
-import {inspect} from "util";
 import {IConfigData} from "../../src/config/IConfigData";
 
 
@@ -32,9 +32,10 @@ class ConfigTests {
 
         Config['$self'] = null
         Config.options({configs: []}, false)
-        expect(Config.instance()['$options'].configs.length).to.eq(0)
-        expect(Config.instance()['$options'].handlers.length).to.not.eq(0)
-        expect(Config.instance()['$options'].fileSupport.length).to.not.eq(0)
+        let instance = Config.instance()
+        expect(instance['$options'].configs.length).to.eq(0)
+        expect(instance['$options'].handlers.length).to.not.eq(0)
+        expect(instance['$options'].fileSupport.length).to.not.eq(0)
     }
 
 
