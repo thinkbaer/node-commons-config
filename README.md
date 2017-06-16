@@ -1,7 +1,7 @@
 
 # node-commons-config
 
-![build status](https://travis-ci.org/thinkbaer/node-commones-config.svg?branch=master)
+[![Build Status](https://travis-ci.org/thinkbaer/node-commons-config.svg?branch=master)](https://travis-ci.org/thinkbaer/node-commons-config)
 [![codecov](https://codecov.io/gh/thinkbaer/node-commons-config/branch/master/graph/badge.svg)](https://codecov.io/gh/thinkbaer/node-commons-config)
 
 
