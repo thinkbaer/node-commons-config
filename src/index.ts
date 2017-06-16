@@ -11,7 +11,7 @@ export * from './config/ConfigJar'
 
 export * from './config/IConfigData'
 export * from './config/IConfigOptions'
-export * from './config/IConfigSupport'
+export * from './config/ConfigSupport'
 export * from './config/IJarOptions'
 export * from './config/IOptions'
 export * from './config/Source'

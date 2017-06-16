@@ -73,6 +73,21 @@ export class PlatformTools {
     }
 
     /**
+     * Resolved given path. Does "path.resolve".
+     */
+    static pathNormAndResolve(pathStr: string): string {
+        return this.pathNormilize(this.pathResolve(pathStr))
+    }
+
+    static isFile(pathStr: string): boolean {
+        return fs.statSync(pathStr).isFile();
+    }
+
+    static isDir(pathStr: string): boolean {
+        return fs.statSync(pathStr).isDirectory()
+    }
+
+    /**
      * Synchronously checks if file exist. Does "fs.existsSync".
      */
     static fileExist(pathStr: string): boolean {

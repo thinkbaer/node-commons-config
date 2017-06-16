@@ -7,6 +7,8 @@ export class Source  {
 
     data:IConfigData = null
 
+    prefix: string = null
+
     constructor(opts:any){
         Object.assign(this,opts)
     }

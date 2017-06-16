@@ -13,9 +13,12 @@ export class Utils {
         return arr.filter((v, i, a) => a.indexOf(v) === i);
     }
 
+    static escapeRegExp(text: string): string {
+        return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    }
 
-    static clone(obj: any){
-        return Utils.merge({},obj)
+    static clone(obj: any) {
+        return Utils.merge({}, obj)
     }
 
     static merge(...args: any[]): any {
@@ -98,11 +101,11 @@ export class Utils {
 
     static splitTyped(arr: string, sep: string = '.'): any[] {
         let paths = arr.split('.')
-        let normPaths:any[] = []
-        paths.forEach(function(_x){
+        let normPaths: any[] = []
+        paths.forEach(function (_x) {
             if (typeof _x === 'string' && /\d+/.test(_x)) {
                 normPaths.push(parseInt(_x))
-            }else{
+            } else {
                 normPaths.push(_x)
             }
 
@@ -132,23 +135,23 @@ export class Utils {
                 arr[first] = {}
             }
         } else {
-            if(Array.isArray(arr)){
-                if(!(typeof first === 'number')){
+            if (Array.isArray(arr)) {
+                if (!(typeof first === 'number')) {
                     return false
                 }
-            }else if (Array.isArray(arr[first])) {
-                if(!(typeof next === 'number')){
+            } else if (Array.isArray(arr[first])) {
+                if (!(typeof next === 'number')) {
                     return false
                 }
-            }else if (!Utils.isObject(arr[first])) {
+            } else if (!Utils.isObject(arr[first])) {
                 // primative
-                if(Utils.isObject(value)){
+                if (Utils.isObject(value)) {
                     return false
                 }
-            }else {
-                if(typeof next === 'number'){
+            } else {
+                if (typeof next === 'number') {
                     // must be array
-                    if(!Array.isArray(arr[first])){
+                    if (!Array.isArray(arr[first])) {
                         return false
                     }
                 }
@@ -164,12 +167,12 @@ export class Utils {
     }
 
 
-    static isObject(o:any){
+    static isObject(o: any) {
         return typeof o === 'object'
     }
 
 
-    static isString(o:any){
+    static isString(o: any) {
         return typeof o === 'string'
     }
 

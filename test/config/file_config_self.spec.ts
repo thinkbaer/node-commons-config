@@ -13,6 +13,7 @@ import {IFileConfigOptions} from "../../src/config/handler/IFileConfigOptions";
 import {Config} from "../../src/config/Config";
 import {SystemConfig} from "../../src/config/handler/SystemConfig";
 import {FileConfig} from "../../src/config/handler/FileConfig";
+import {ConfigJar} from "../../src/config/ConfigJar";
 
 
 
@@ -27,7 +28,7 @@ class FileConfigTests {
     'pattern'() {
         Config['$self'] = null
         let system = new SystemConfig() // ConfigHandler.getHandlerByType('system')
-        let systemJar = system.create({})
+        let systemJar = <ConfigJar>system.create()
 
         systemJar.merge({os: {hostname: 'testhost'}, env: {stage: 'testing'}})
 
@@ -60,38 +61,40 @@ class FileConfigTests {
     'file input formats'() {
         Config['$self'] = null
         let system = new SystemConfig() // ConfigHandler.getHandlerByType('system')
-        let systemJar = system.create({})
-        Config.jar('system',systemJar).merge({os: {hostname: 'testhost'}, env: {stage: 'testing'}})
+        let systemJar = <ConfigJar>system.create()
+        systemJar.merge({os: {hostname: 'testhost'}, env: {stage: 'testing'}})
 
 
-        let cfg = new FileConfig()
-
-        // Direct file name
-        let jar = cfg.create(<IFileConfigOptions>{
+        let cfg = new FileConfig(<IFileConfigOptions>{
             file: __dirname + `/../${SUBTESTPATH}/default.json`
         })
+
+        // Direct file name
+        let jar = <ConfigJar>cfg.create()
         expect(jar.get('hallo')).to.eq('welt')
 
         // Normalize
-        jar = cfg.create(<IFileConfigOptions>{
+        cfg = new FileConfig(<IFileConfigOptions>{
             file: {
                 dirname: __dirname + `/../${SUBTESTPATH}/test/..`,
                 filename: 'default'
             }
         })
+        jar = cfg.create()
         expect(jar.get('hallo')).to.eq('welt')
 
         // Normalize and resolve
-        jar = cfg.create(<IFileConfigOptions>{
+        cfg = new FileConfig(<IFileConfigOptions>{
             file: {
                 dirname: `./test/${SUBTESTPATH}`,
                 filename: 'default'
             }
         })
+        jar = cfg.create()
         expect(jar.get('hallo')).to.eq('welt')
 
         // use patterns
-        jar = cfg.create(<IFileConfigOptions>{
+        cfg = new FileConfig(<IFileConfigOptions>{
             file: {
                 dirname: `./test/${SUBTESTPATH}`,
                 filename: 'default'
@@ -103,6 +106,7 @@ class FileConfigTests {
 
             ]
         })
+        jar = cfg.create()
 
         expect(jar.get('hallo')).to.eq('welt2')
         expect(jar.get('p_testing')).to.be.true

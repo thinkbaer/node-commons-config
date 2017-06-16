@@ -9,6 +9,12 @@ export interface IFileConfigOptions extends IConfigOptions {
      */
     file: string|IFilePath
 
+
+    /**
+     * Prefix for the data, like "some.thing"; dotted
+     */
+    prefix?: string
+
     /**
      * Patterns for file combinations
      */

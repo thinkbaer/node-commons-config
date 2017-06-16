@@ -64,6 +64,12 @@ export class ConfigJar {
             source = Utils.clone(data)
             this._source.push(<Source>source)
             data = (<Source>source).data
+
+            if((<Source>source).prefix){
+                let _data={}
+                Utils.set(_data,(<Source>source).prefix,data)
+                data = _data
+            }
         }
 
         if(this._options.interpolate && opts.interpolate){

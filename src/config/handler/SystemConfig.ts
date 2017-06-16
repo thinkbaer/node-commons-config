@@ -1,11 +1,13 @@
 import * as os from 'os'
 
-import {IConfigSupport} from "../IConfigSupport";
+
 import {IConfigData} from "../IConfigData";
 import {ConfigJar} from "../ConfigJar";
 import {IConfigOptions} from "../IConfigOptions";
 import {Source} from "../Source";
 import {Utils} from "../../utils/Utils";
+import {ConfigSupport} from "../ConfigSupport";
+import {Config} from "../Config";
 
 
 /**
@@ -14,7 +16,11 @@ import {Utils} from "../../utils/Utils";
  * Named arguments beginning with '--' will be stripped of '--' and put as key-value pair in the array.
  * If no value is set then the value will be 'true'.
  */
-export  class SystemConfig implements IConfigSupport {
+export  class SystemConfig extends ConfigSupport<IConfigOptions> {
+
+    constructor(options:IConfigOptions = {namespace:'system'}){
+        super(options);
+    }
 
     type(): string {
         return 'system';
@@ -28,7 +34,7 @@ export  class SystemConfig implements IConfigSupport {
             platform: os.platform(),
         }
 
-        jar.merge(new Source({source: 'os', data: {os: _os}}))
+        jar.merge(new Source({source: 'os', data: _os , prefix:'os'}))
         return jar
     }
 
@@ -39,7 +45,7 @@ export  class SystemConfig implements IConfigSupport {
         Object.keys(data).forEach(k => {
             configData[k.toLocaleLowerCase()] = data[k]
         })
-        jar.merge(new Source({source: 'env', data: {env: configData}}))
+        jar.merge(new Source({source: 'env', data: configData, prefix:'env'}))
 
         return jar
     }
@@ -70,14 +76,14 @@ export  class SystemConfig implements IConfigSupport {
             }
         }
 
-        jar.merge(new Source({source: 'argv', data: {argv: data}}))
+        jar.merge(new Source({source: 'argv', data: data, prefix:'argv'}))
 
         return jar
     }
 
 
-    create(options?: IConfigOptions): ConfigJar {
-        let jar = ConfigJar.create({namespace:'system'})
+    create(): ConfigJar {
+        let jar = Config.jar({namespace:'system'})
         this.attach_os(jar)
         this.attach_env(jar)
         this.attach_argv(jar)

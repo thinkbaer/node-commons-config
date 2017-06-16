@@ -1,5 +1,6 @@
 import {IConfigOptions} from "../IConfigOptions";
 import {IFilePath} from "./IFilePath";
+import {NamingResolvePattern} from "../../types";
 
 export interface IDirectoryConfigOptions extends IConfigOptions {
 
@@ -22,7 +23,7 @@ export interface IDirectoryConfigOptions extends IConfigOptions {
      * - none - means that data from all files will be merge in one jar with given namespace
      *
      */
-    namespaceing?: 'by_dirname' | 'by_filename' | 'none'
+    namespaceing?: NamingResolvePattern
 
     /**
      * Separator for binding multiple namespaces
@@ -37,7 +38,7 @@ export interface IDirectoryConfigOptions extends IConfigOptions {
      * - full
      * - none
      */
-    prefixing?: 'by_directory' | 'by_file' | 'full' | 'none'
+    prefixing?: NamingResolvePattern
 
     /**
      * Separator by which a filename will be identified
@@ -52,5 +53,5 @@ export interface IDirectoryConfigOptions extends IConfigOptions {
     /**
      * Patterns for file combinations
      */
-    pattern?: string[]
+    suffixPattern?: string[]
 }

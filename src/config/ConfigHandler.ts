@@ -1,10 +1,12 @@
 import {ClassLoader} from "../utils/ClassLoader";
 
-import {IConfigSupport} from "./IConfigSupport";
+
 import {StringOrFunction} from "../types";
 
 import {SystemConfig} from "./handler/SystemConfig";
 import {FileConfig} from "./handler/FileConfig";
+import {ConfigSupport} from "./ConfigSupport";
+import {IConfigOptions} from "./IConfigOptions";
 
 
 export class ConfigHandler {
@@ -34,7 +36,7 @@ export class ConfigHandler {
 
         classes.forEach((klass: Function) => {
 
-            let l: IConfigSupport = null
+            let l: any = null
             try {
                 l = Reflect.construct(klass, [])
             } catch (err) {
@@ -57,9 +59,9 @@ export class ConfigHandler {
         return Object.keys(this.$supports).length
     }
 
-    static getHandlerByType(ext: string): IConfigSupport {
+    static getHandlerByType(ext: string, opts:IConfigOptions): ConfigSupport<any> {
         if (this.$supports[ext]) {
-            return Reflect.construct(this.$supports[ext], [])
+            return Reflect.construct(this.$supports[ext], [opts])
         }
         return null
     }

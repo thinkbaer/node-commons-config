@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import {IConfigSupport} from "../IConfigSupport";
+import {ConfigSupport} from "../ConfigSupport";
 import {ConfigJar} from "../ConfigJar";
 import {IFileConfigOptions} from "./IFileConfigOptions";
 import {FileSupport} from "../../filesupport/FileSupport";
@@ -12,21 +12,25 @@ import {Config} from "../Config";
 import {IFilePath} from "./IFilePath";
 import {FileSource} from "./FileSource";
 import {SystemConfig} from "./";
-
+import {IJarOptions} from "../IJarOptions";
 
 
 /**
  * Read configuration from file
  */
-export class FileConfig implements IConfigSupport {
+export class FileConfig extends ConfigSupport<IFileConfigOptions> {
 
+
+    constructor(options: IFileConfigOptions) {
+        super(options)
+    }
 
     type() {
         return 'file'
     }
 
 
-    private readFile(file:IFilePath):IConfigData{
+    private readFile(file: IFilePath): IConfigData {
         let supportedTypes = FileSupport.getSupportedTypes()
         let used_path = null
         let used_ext = null
@@ -64,17 +68,17 @@ export class FileConfig implements IConfigSupport {
 
     }
 
-    private readFiles(paths:IFilePath[]): FileSource[] {
+    private readFiles(paths: IFilePath[]): FileSource[] {
         let self = this
-        let collection:FileSource[] = []
+        let collection: FileSource[] = []
 
         paths.forEach((path, index) => {
             let data = self.readFile(path)
-            if(!data && index === 0){
+            if (!data && index === 0) {
                 // TODO make this configurable
                 throw new Error('base file doesn\'t exists')
-            }else if(data){
-                let source = new FileSource({data:data, file:path})
+            } else if (data) {
+                let source = new FileSource({data: data, file: path, prefix: this.$options.prefix})
                 collection.push(source)
             }
         })
@@ -82,7 +86,7 @@ export class FileConfig implements IConfigSupport {
         return collection;
     }
 
-    private explodeFilePath(path:string|IFilePath):IFilePath{
+    private explodeFilePath(path: string | IFilePath): IFilePath {
         let file: IFilePath = null;
         if (typeof path === 'string') {
             let filepath = PlatformTools.pathNormilize(PlatformTools.pathResolve(path))
@@ -100,29 +104,29 @@ export class FileConfig implements IConfigSupport {
     }
 
 
-    private attachPatternFiles(basefile:IFilePath, options?: IFileConfigOptions): IFilePath[]{
+    private attachPatternFiles(basefile: IFilePath): IFilePath[] {
 
         let files: IFilePath[] = []
-        if(options.pattern){
+        if (this.$options.pattern) {
             let self = this
 
             // if not globally definied then load directly
-            if(!Config.hasJar('system')){
-                let system  = new SystemConfig()
-                let systemJar = system.create()
-                systemJar.interpolateAgainst(options)
-            }else{
-                Config.jar('system').interpolateAgainst(options)
+            if (!Config.hasJar('system')) {
+                let system = new SystemConfig()
+                let systemJar = <ConfigJar>system.create()
+                systemJar.interpolateAgainst(this.$options)
+            } else {
+                Config.jar('system').interpolateAgainst(this.$options)
             }
 
-            options.pattern.forEach(pattern => {
+            this.$options.pattern.forEach(pattern => {
                 // TODO works only in posix systems!
-                let subfile : IFilePath = null;
-                if(/^\.?\//.test(pattern)){
+                let subfile: IFilePath = null;
+                if (/^\.?\//.test(pattern)) {
                     // full or app relative path given!
                     subfile = self.explodeFilePath(pattern)
-                }else{
-                    subfile = self.explodeFilePath(basefile.dirname+'/'+pattern)
+                } else {
+                    subfile = self.explodeFilePath(basefile.dirname + '/' + pattern)
                 }
                 files.push(subfile)
             })
@@ -132,18 +136,18 @@ export class FileConfig implements IConfigSupport {
     }
 
 
-    create(options?: IFileConfigOptions): ConfigJar {
+    create(): ConfigJar {
         let files: IFilePath[] = []
-        let basefile = this.explodeFilePath(options.file)
+        let basefile = this.explodeFilePath(this.$options.file)
         files.push(basefile)
 
-        let additional_files = this.attachPatternFiles(basefile,options)
-        if(additional_files.length){
+        let additional_files = this.attachPatternFiles(basefile)
+        if (additional_files.length) {
             files = files.concat(additional_files)
         }
 
         let sources = this.readFiles(files)
-        let jar = ConfigJar.create({namespace: options.namespace})
+        let jar = Config.jar(<IJarOptions>this.$options)
 
         sources.forEach(_source => {
             jar.merge(_source)
