@@ -34,6 +34,7 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
         let supportedTypes = FileSupport.getSupportedTypes()
         let used_path = null
         let used_ext = null
+
         while (!used_ext && supportedTypes.length > 0) {
             let ext = supportedTypes.shift()
             used_path = file.dirname + '/' + file.filename + '.' + ext
@@ -74,10 +75,18 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
 
         paths.forEach((path, index) => {
             let data = self.readFile(path)
+            if(data === null){
+                // file not found
+                return;
+            }
+            /*
             if (!data && index === 0) {
                 // TODO make this configurable
+                console.log(paths)
                 throw new Error('base file doesn\'t exists')
-            } else if (data) {
+            } else
+            */
+            if (data) {
                 let source = new FileSource({data: data, file: path, prefix: this.$options.prefix})
                 collection.push(source)
             }

@@ -28,7 +28,7 @@ export class FileSupport {
      *
      * @param directories
      */
-    static reload(directories: StringOrFunction | StringOrFunction[] = this.DEFAULT_TYPES): boolean {
+    static reload(directories: StringOrFunction | StringOrFunction[] = FileSupport.DEFAULT_TYPES): boolean {
         this.reset()
 
         if (!Array.isArray(directories)) {

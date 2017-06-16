@@ -82,13 +82,16 @@ export class Utils {
         if (path) {
             let paths = path.split('.')
             let first: string | number = paths.shift()
-            if (/\d+/.test(first)) {
+            if (/^[1-9]+\d*$/.test(first)) {
                 first = parseInt(first)
             }
             if (arr.hasOwnProperty(first)) {
                 let pointer: any = arr[first]
-
-                return Utils.get(pointer, paths.join('.'))
+                if(paths.length === 0){
+                    return pointer
+                }else{
+                    return Utils.get(pointer, paths.join('.'))
+                }
             } else {
                 // not found
                 return null

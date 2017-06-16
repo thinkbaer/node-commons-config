@@ -13,6 +13,8 @@ import {
     DEFAULT_JAR_NAME, SELECTOR_SEPARATOR, NamingResolvePattern
 } from "../../types";
 import {ConfigSupport} from "../ConfigSupport";
+import * as multimatch from "multimatch";
+import {FileConfig} from "./FileConfig";
 
 
 /**
@@ -38,6 +40,8 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
 
     }
 
+
+
     constructor(options: IDirectoryConfigOptions) {
         super(Utils.merge(DirectoryConfig.DEFAULT_DIRECTORY_OPTIONS, options))
     }
@@ -60,9 +64,19 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
 
         list.forEach(file_or_dir => {
             let path = file_or_dir.replace(dirname + '', '')
+
             if (!path) {
                 // equals dirname
                 return;
+            }
+
+            path = path.replace(/^\//, '')
+            if(self.$options.exclude && self.$options.exclude.length > 0){
+                // findes if path is excluded
+                let result = multimatch([path],self.$options.exclude)
+                if(result.length && result[0] == path){
+                    return
+                }
             }
 
             let is_file = PlatformTools.isFile(file_or_dir)
@@ -83,7 +97,6 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
                     let fileCfg: IFileConfigOptions = {
                         namespace: DEFAULT_JAR_NAME,
                         file: file,
-                        // prefix: paths.join('.'),
                         pattern: []
                     }
 
@@ -139,12 +152,21 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
 
 
     create(): ConfigJar[] {
+        let files = this.listFilesInDirectory()
+        let jars:{[k:string]:ConfigJar} = {}
 
-        let dirname = PlatformTools.pathNormAndResolve(this.$options.dirname)
+        files.forEach(_options => {
+            let fileCfg = new FileConfig(_options)
+            let jar = fileCfg.create()
+            jars[jar.namespace] = jar
+        })
 
-        ConfigJar.create({namespace: this.$options.namespace})
+        let _jars:ConfigJar[] = []
+        Object.keys(jars).forEach(_k => {
+            _jars.push(jars[_k])
+        })
 
-        return null
+        return _jars
     }
 
 }
