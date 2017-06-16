@@ -41,7 +41,7 @@ export class Gulpfile {
      */
     @Task()
     compile() {
-        return gulp.src("package.json", { read: false })
+        return gulp.src("package.json", {read: false})
             .pipe(shell(["tsc"]));
     }
 
@@ -54,7 +54,7 @@ export class Gulpfile {
      */
     @MergedTask()
     packageCompile() {
-        const tsProject = ts.createProject("tsconfig.json", { typescript: require("typescript") });
+        const tsProject = ts.createProject("tsconfig.json", {typescript: require("typescript")});
         const tsResult = gulp.src(["./src/**/*.ts", "./node_modules/@types/**/*.ts"])
             .pipe(sourcemaps.init())
             .pipe(tsProject());
@@ -62,7 +62,7 @@ export class Gulpfile {
         return [
             tsResult.dts.pipe(gulp.dest("./build/package")),
             tsResult.js
-                .pipe(sourcemaps.write(".", { sourceRoot: "", includeContent: true }))
+                .pipe(sourcemaps.write(".", {sourceRoot: "", includeContent: true}))
                 .pipe(gulp.dest("./build/package"))
         ];
     }
@@ -113,6 +113,32 @@ export class Gulpfile {
         ];
     }
 
+    // -------------------------------------------------------------------------
+    // Main Packaging and Publishing tasks
+    // -------------------------------------------------------------------------
+
+    /**
+     * Publishes a package to npm from ./build/package directory.
+     */
+    @Task()
+    packagePublish() {
+        return gulp.src("package.json", {read: false})
+            .pipe(shell([
+                "cd ./build/package && npm publish"
+            ]));
+    }
+
+    /**
+     * Publishes a package to npm from ./build/package directory with @next tag.
+     */
+    @Task()
+    packagePublishNext() {
+        return gulp.src("package.json", {read: false})
+            .pipe(shell([
+                "cd ./build/package && npm publish --tag next"
+            ]));
+    }
+
 
     // -------------------------------------------------------------------------
     // Run tests tasks
@@ -123,7 +149,7 @@ export class Gulpfile {
      */
     @Task()
     tslint() {
-        return gulp.src(["./src/**/*.ts", "./test/**/*.ts", "./sample/**/*.ts"])
+        return gulp.src(["./src/**/*.ts", "./test/**/*.ts"])
             .pipe(tslint())
             .pipe(tslint.report(stylish, {
                 emitError: true,
