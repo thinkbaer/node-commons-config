@@ -6,6 +6,7 @@
 import {Gulpclass, Task, SequenceTask, MergedTask} from "gulpclass";
 
 const gulp = require("gulp");
+const bump = require('gulp-bump');
 const del = require("del");
 const shell = require("gulp-shell");
 const replace = require("gulp-replace");
@@ -139,6 +140,33 @@ export class Gulpfile {
             ]));
     }
 
+    // -------------------------------------------------------------------------
+    // Versioning
+    // -------------------------------------------------------------------------
+
+    @Task()
+    vpatch() {
+        return gulp.src('package.json')
+            .pipe(bump({type: "patch"}))
+            .pipe(gulp.dest('./'));
+
+    }
+
+    @Task()
+    vminor() {
+        return gulp.src('package.json')
+            .pipe(bump({type: "minor"}))
+            .pipe(gulp.dest('./'));
+
+    }
+
+    @Task()
+    vmajor() {
+        return gulp.src('package.json')
+            .pipe(bump({type: "major"}))
+            .pipe(gulp.dest('./'));
+
+    }
 
     // -------------------------------------------------------------------------
     // Run tests tasks
