@@ -14,7 +14,7 @@ import {XmlFileSupport} from "../../src/filesupport/types/XmlFileSupport";
 
 
 
-@suite('filetypes/XmlFileSupport')
+@suite('filesupport/types/XmlFileSupport')
 class XmlCfgReaderTests {
 
 

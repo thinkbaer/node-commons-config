@@ -12,7 +12,7 @@ import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
 
 
 
-@suite('filetypes/JsonFileSupport')
+@suite('filesupport/types/JsonFileSupport')
 class JsonSupportTests {
 
 
