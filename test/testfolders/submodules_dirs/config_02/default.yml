@@ -1,6 +1,2 @@
-storage:
-  driver: sqlite
-
-
-override:
-  tx: ${storage.driver}
+base02: default
+interpolate02: ${base02}
