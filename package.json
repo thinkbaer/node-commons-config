@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "directories": {
-    "doc": "docs"
+    "doc": "docs/de"
   },
   "scripts": {
     "test": "nyc mocha --opts test/mocha.all.opts",
@@ -16,6 +16,16 @@
   },
   "author": "Robert Kania",
   "license": "MIT",
+  "description": "Commons-config is a configurable configuration content handler which supports multiple configuration infrastructures and file formats.",
+  "keywords": [
+    "config",
+    "commons",
+    "file",
+    "directory",
+    "files",
+    "configuration",
+    "typescript"
+  ],
   "bugs": {
     "url": "https://github.com/thinkbaer/node-commons-config/issues"
   },
@@ -60,6 +70,7 @@
     "glob": "^7.1.2",
     "multimatch": "^2.1.0"
   },
+  "private": true,
   "nyc": {
     "extension": [
       ".ts",

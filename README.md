@@ -10,15 +10,28 @@ multiple configuration infrastructures and file formats.
 
 Feature:
 
+* Typescript support
 * Interpolation
 * Namespacing
 * Extendable by own handler or file support
+* Multiple files
+* Multiple configuration variants combination possible
 
 
+## File type support
 
-## System configuration
+* Json
+* Yaml
+* Xml
+* other in development
 
-```js
+## Supported configuration types
+
+### System configuration
+
+```ts
+import {Config} from "commons-config";
+
 Config.options({
     configs: [
         {
@@ -32,7 +45,9 @@ let stage = Config.get('env.stage')
 ```
 
 
-## File configuration
+### File configuration
+
+Sample file structure:
 
 ```
 ./config/
@@ -43,8 +58,11 @@ let stage = Config.get('env.stage')
     secrets-prodhost-production.yml
 ```
 
+Sample code:
 
 ```ts
+import {Config} from "commons-config";
+
 Config.options({
     configs: [
         {
@@ -63,8 +81,9 @@ Config.options({
 }
 ```
 
-## Directory configuration
+### Directory configuration
 
+Sample file structure:
 
 ```
 ./config/
@@ -79,7 +98,12 @@ Config.options({
 
 ```
 
-```js
+
+Sample code:
+
+```ts
+import {Config} from "commons-config";
+
 Config.options({
     configs: [
         {
@@ -98,12 +122,83 @@ Config.options({
 let userName = Config.get('schema.database.user')
 ```
 
+### Combinig multiple configuration types
+
+Sample file structure:
+
+```
+./
+    secrets.yml
+    secrets-prodhost.yml
+./config/
+    default.yml
+./config/schema/
+    db_access.yml
+    db_access-production.yml
+    db_structure.yml
+./config/modules/
+    module01.json
+    module02.yml
+
+```
 
 
-## File type support
+Sample file structure:
 
-* Json
-* Yaml
-* Xml
+```ts
+import {Config} from "commons-config";
+
+Config.options({
+    configs: [
+        {
+            type: 'system'
+        },
+        {
+            type: 'file',
+            file: {
+                dirname: `./`,
+                filename: 'default'
+            },
+            pattern: [
+                'secrets-${os.hostname}'
+            ]
+        },
+        {
+            type: 'directory',
+            dirname: './config',
+            prefixing: 'by_dirname'
+            suffixPattern: [
+                '${env.stage}',
+                '${os.hostname}',
+                '${os.hostname}-${env.stage}'
+            ]
+        }
+    ]
+}
+
+```
+
+
+
+## Embedding in code
+
+Integration in javascript source code:
+
+```js
+const commons_config = require('commons-config')
+const Config = commons_config.Config
+
+Config.options({ ... })
+```
+
+Integration in typescript source code:
+
+```js
+import {Config} from "commons-config";
+
+Config.options({ ... })
+```
+
+
 
 

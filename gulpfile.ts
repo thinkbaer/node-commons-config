@@ -95,6 +95,7 @@ export class Gulpfile {
     @Task()
     packagePreparePackageFile() {
         return gulp.src("./package.json")
+            .pipe(replace("\"private\": true,", "\"private\": false,"))
             .pipe(gulp.dest("./build/package"));
     }
 
