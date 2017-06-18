@@ -1,5 +1,5 @@
 
-@TASK#6 170618 +
+[.line-through]#@TASK#6 170618# +patch +
 fix free key definition in IOptions and IConfigOptions
 
 

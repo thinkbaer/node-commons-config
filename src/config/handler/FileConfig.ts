@@ -119,14 +119,6 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
         if (this.$options.pattern) {
             let self = this
 
-            // if not globally definied then load directly
-            if (!Config.hasJar('system')) {
-                let system = new SystemConfig()
-                let systemJar = <ConfigJar>system.create()
-                systemJar.interpolateAgainst(this.$options)
-            } else {
-                Config.jar('system').interpolateAgainst(this.$options)
-            }
 
             this.$options.pattern.forEach(pattern => {
                 // TODO works only in posix systems!
