@@ -28,4 +28,9 @@ export interface IOptions {
      *  Configurations
      */
     configs?: IConfigOptions[]
+
+    /**
+     * Allow free key definitions
+     */
+    [k:string]:any
 }

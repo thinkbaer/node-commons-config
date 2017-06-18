@@ -1,29 +1,36 @@
 
+@TASK#6 170618 +
+fix free key definition in IOptions and IConfigOptions
 
-@TASK#5 170616 +patch +
-Write tests for SystemConfig initialization by config options. Name: system_config_init.spec.ts.
 
 
-@TASK#4 170615 0.4.0 +
+@TASK#4 170615 +minor +
 File supports for
-- js
-- ts
-- properties
-- json5
-- hjson
-- toml
-- coffee
-- iced
-- cson
+
+- js +patch
+- ts +patch
+- properties +patch
+- json5 +patch
+- hjson +patch
+- toml +patch
+- coffee +patch
+- iced +patch
+- cson +patch
 
 
 
-@TASK#3 170614 0.3.0 +
-DirectoryConfig impl
 
 @TASK#2 170614 +
 Use predefined configuration options from ./commons-config.json as default or merge them with
 the default parameter. If a programmatical usage isn't wished.
+
+[.line-through]#@TASK#5 170616 +patch# +
+Write tests for SystemConfig initialization by config options. Name: system_config_init.spec.ts.
+
+
+[.line-through]#@TASK#3 170614 +minor# +
+DirectoryConfig impl
+
 
 [.line-through]#@TASK#1 170614# +
 Config impl+test load config handler and check loading by configuration through parameter
