@@ -11,7 +11,7 @@ export abstract class ConfigSupport<T extends IConfigOptions> {
         this.$options = options
 
         // if not globally definied then load directly
-        if (options.type != 'system' && Config.hasJar('system')) {
+        if (options && options.type != 'system' && Config.hasJar('system')) {
             Config.jar('system').interpolateAgainst(this.$options)
         }
 

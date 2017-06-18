@@ -79,5 +79,4 @@ class ConfigTests {
         expect(Config.hasJar('default')).to.be.true
     }
 
-
 }
