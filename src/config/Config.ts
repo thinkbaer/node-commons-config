@@ -128,6 +128,7 @@ export class Config {
 
 
     _options(options: IOptions = {}, append: boolean = true) {
+        let self = this
         this.$init = true
 
         if (append) {
@@ -148,9 +149,10 @@ export class Config {
         ConfigHandler.reload(this.$options.handlers)
 
         this.$options.configs.forEach(_config => {
-            let handler: ConfigSupport<any> = ConfigHandler.getHandlerByType(_config.type, _config)
+            let handler: ConfigSupport<any> = ConfigHandler.getHandlerByType(_config.type, _config, self._jarsData)
             if (handler) {
                 handler.create()
+
             } else {
                 throw new Error('handler doesn\'t exists')
             }

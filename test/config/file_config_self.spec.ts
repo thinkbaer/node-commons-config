@@ -14,6 +14,7 @@ import {Config} from "../../src/config/Config";
 import {SystemConfig} from "../../src/config/handler/SystemConfig";
 import {FileConfig} from "../../src/config/handler/FileConfig";
 import {ConfigJar} from "../../src/config/ConfigJar";
+import {inspect} from "util";
 
 
 
@@ -59,6 +60,7 @@ class FileConfigTests {
 
     @test
     'file input formats'() {
+        FileSupport.reload()
         Config['$self'] = null
         let system = new SystemConfig() // ConfigHandler.getHandlerByType('system')
         let systemJar = <ConfigJar>system.create()
@@ -67,10 +69,10 @@ class FileConfigTests {
 
         let cfg = new FileConfig(<IFileConfigOptions>{
             file: __dirname + `/../${SUBTESTPATH}/default.json`
-        })
+        },[systemJar.data])
 
         // Direct file name
-        let jar = <ConfigJar>cfg.create()
+        let jar = cfg.create()
         expect(jar.get('hallo')).to.eq('welt')
 
         // Normalize
@@ -79,7 +81,7 @@ class FileConfigTests {
                 dirname: __dirname + `/../${SUBTESTPATH}/test/..`,
                 filename: 'default'
             }
-        })
+        },[systemJar.data])
         jar = cfg.create()
         expect(jar.get('hallo')).to.eq('welt')
 
@@ -89,7 +91,7 @@ class FileConfigTests {
                 dirname: `./test/${SUBTESTPATH}`,
                 filename: 'default'
             }
-        })
+        },[systemJar.data])
         jar = cfg.create()
         expect(jar.get('hallo')).to.eq('welt')
 
@@ -105,9 +107,8 @@ class FileConfigTests {
                 'default-${os.hostname}-${env.stage}',
 
             ]
-        })
+        },[systemJar.data])
         jar = cfg.create()
-
         expect(jar.get('hallo')).to.eq('welt2')
         expect(jar.get('p_testing')).to.be.true
         expect(jar.get('p_testhost')).to.be.true

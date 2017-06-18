@@ -1,18 +1,20 @@
 
 import {ConfigJar} from "./ConfigJar";
-import {Config} from "./Config";
-import {IConfigOptions} from "./IConfigOptions";
+import {IConfigData} from "./IConfigData";
+import {InterpolationSupport} from "../supports/InterpolationSupport";
 
-export abstract class ConfigSupport<T extends IConfigOptions> {
+
+
+export abstract class ConfigSupport<T> {
 
     $options:T;
 
-    constructor(options : T) {
+    constructor(options : T, jarsData:IConfigData[]=[]) {
         this.$options = options
 
         // if not globally definied then load directly
-        if (options && options.type != 'system' && Config.hasJar('system')) {
-            Config.jar('system').interpolateAgainst(this.$options)
+        if (options && options['type'] != 'system' && jarsData && jarsData.length > 0) {
+            InterpolationSupport.exec(this.$options, jarsData)
         }
 
     }

@@ -11,7 +11,6 @@ import {Config} from "../Config";
 
 import {IFilePath} from "./IFilePath";
 import {FileSource} from "./FileSource";
-import {SystemConfig} from "./";
 import {IJarOptions} from "../IJarOptions";
 
 
@@ -21,8 +20,8 @@ import {IJarOptions} from "../IJarOptions";
 export class FileConfig extends ConfigSupport<IFileConfigOptions> {
 
 
-    constructor(options: IFileConfigOptions) {
-        super(options)
+    constructor(options: IFileConfigOptions, jarsData:IConfigData[]=[]) {
+        super(options,jarsData)
     }
 
     type() {

@@ -7,6 +7,8 @@ import {SystemConfig} from "./handler/SystemConfig";
 import {FileConfig} from "./handler/FileConfig";
 import {ConfigSupport} from "./ConfigSupport";
 import {IConfigOptions} from "./IConfigOptions";
+import {Config} from "./Config";
+import {IConfigData} from "./IConfigData";
 
 
 export class ConfigHandler {
@@ -59,9 +61,9 @@ export class ConfigHandler {
         return Object.keys(this.$supports).length
     }
 
-    static getHandlerByType(ext: string, opts:IConfigOptions): ConfigSupport<any> {
+    static getHandlerByType(ext: string, opts:IConfigOptions, _jarsData:IConfigData = []): ConfigSupport<any> {
         if (this.$supports[ext]) {
-            return Reflect.construct(this.$supports[ext], [opts])
+            return Reflect.construct(this.$supports[ext], [opts, _jarsData])
         }
         return null
     }

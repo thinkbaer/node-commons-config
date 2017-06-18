@@ -15,6 +15,7 @@ import {
 import {ConfigSupport} from "../ConfigSupport";
 import * as multimatch from "multimatch";
 import {FileConfig} from "./FileConfig";
+import {IConfigData} from "../IConfigData";
 
 
 /**
@@ -42,8 +43,8 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
 
 
 
-    constructor(options: IDirectoryConfigOptions) {
-        super(Utils.merge(DirectoryConfig.DEFAULT_DIRECTORY_OPTIONS, options))
+    constructor(options: IDirectoryConfigOptions, jarsData:IConfigData[]=[]) {
+        super(Utils.merge(DirectoryConfig.DEFAULT_DIRECTORY_OPTIONS, options),jarsData)
     }
 
     type(): string {

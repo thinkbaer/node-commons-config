@@ -4,10 +4,11 @@ import * as os from 'os'
 import {IConfigData} from "../IConfigData";
 import {ConfigJar} from "../ConfigJar";
 import {IConfigOptions} from "../IConfigOptions";
-import {Source} from "../Source";
+
 import {Utils} from "../../utils/Utils";
 import {ConfigSupport} from "../ConfigSupport";
 import {Config} from "../Config";
+import {Source} from "../Source";
 
 
 /**
@@ -18,8 +19,8 @@ import {Config} from "../Config";
  */
 export  class SystemConfig extends ConfigSupport<IConfigOptions> {
 
-    constructor(options:IConfigOptions = {namespace:'system'}){
-        super(options);
+    constructor(options:IConfigOptions = {namespace:'system'}, jarsData:IConfigData[]=[]){
+        super(options,jarsData);
     }
 
     type(): string {

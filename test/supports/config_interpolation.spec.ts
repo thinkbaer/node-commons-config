@@ -4,25 +4,25 @@ describe('', () => {})
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
 import {expect} from "chai";
-import {InterpolationSupport} from "../../src/supports/InterpolationSupport";
-import {IConfigData} from "../../src/config/IConfigData";
-import {Utils} from "../../src/utils/Utils";
+import {inspect} from 'util'
 import {Config} from "../../src/config/Config";
 
 
-@suite('supports/InterpolationSupports')
+@suite('supports/InterpolationSupports used in ConfigSupport')
 class ConfigInterpolationTests {
 
 
     @test
     'config support interpolation'() {
-        process.argv.push('--configfile', __dirname + '/../testfolders/files/file/config/default.json')
+        process.argv.push('--configfile', __dirname + '/../testfolders/file/config/default.json')
         Config['$self'] = null
         Config.options({
             configs: [
                 {type: 'file', file: '${argv.configfile}'}
             ]
         })
+
+        // console.log(inspect(Config.jarsData,false,10))
 
         expect(Config.get('hallo')).to.eq('welt')
 
