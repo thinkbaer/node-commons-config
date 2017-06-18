@@ -55,28 +55,32 @@ class ConfigTests {
         expect(inst['$jars']['system']['_source'][2]['source']).to.eq('argv')
 
         // test method jars
-        let jars:ConfigJar[] = Config.jars
+        let jars: ConfigJar[] = Config.jars
         expect(jars.length).to.eq(1)
         expect(jars[0].namespace).to.eq('system')
 
         // test method jarsData
-        let jarsData:IConfigData[] = Config.jarsData
+        let jarsData: IConfigData[] = Config.jarsData
         expect(jarsData.length).to.eq(1)
         expect(jarsData[0]['os']['hostname']).to.eq(os.hostname())
 
         // test method get
         expect(Config.get('os').hostname).to.eq(os.hostname())
         expect(Config.get('os.hostname')).to.eq(os.hostname())
-        expect(Config.get('os.hostname','system')).to.eq(os.hostname())
+        expect(Config.get('os.hostname', 'system')).to.eq(os.hostname())
 
         // test method set
-        expect(Config.set('env.hallo','welt','system')).to.be.true
+        expect(Config.set('env.hallo', 'welt', 'system')).to.be.true
         expect(Config.get('env.hallo')).to.eq('welt')
 
-        expect(Config.set('env.hallo_welt','ja')).to.be.true
+        expect(Config.set('env.hallo_welt', 'ja')).to.be.true
         expect(Config.get('env.hallo_welt')).to.eq('ja')
 
         expect(Config.hasJar('default')).to.be.true
     }
 
+    @test
+    'combination'() {
+
+    }
 }
