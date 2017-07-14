@@ -7,7 +7,7 @@ import {Source} from "../Source";
 
 export class FileSource extends Source{
 
-    file:IFilePath
+    file:IFilePath;
 
 
     constructor(opts:any){

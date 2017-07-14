@@ -1,6 +1,7 @@
 // import {merge, mergeDeep} from "typescript-object-utils";
 import * as merge from 'deepmerge'
-import {type} from "os";
+import * as _ from 'lodash'
+import {Options} from "deepmerge";
 
 export class Utils {
 
@@ -18,11 +19,18 @@ export class Utils {
     }
 
     static clone(obj: any) {
-        return Utils.merge({}, obj)
+        return _.cloneDeep(obj)
+    }
+
+    static mergeArray(dest:any[],source:any[],options:Options<any>){
+        let res = _.concat(dest,source);
+        res = _.uniqBy(res,(_r)=>{return JSON.stringify(_r)});
+        return res
     }
 
     static merge(...args: any[]): any {
-        return merge.all(args)
+        return merge.all(args, {arrayMerge: this.mergeArray})
+        //return _.merge(...args);//merge.all(args)
         /*
          let tmp:any={}
          args.forEach(_x => {tmp = mergeDeep(tmp,_x)})
@@ -45,7 +53,7 @@ export class Utils {
                             location: [...location, ...[key], ...[j]],
                             parent: obj,
                             isLeaf: false
-                        })
+                        });
                         walk(el, [...location, ...[key], ...[j]])
                     })
 
@@ -58,7 +66,7 @@ export class Utils {
                         index: null,
                         location: [...location, ...[key]],
                         isLeaf: false
-                    })
+                    });
                     walk(obj[key], [...location, ...[key]])
 
                     // We've reached a leaf node, call fn on the leaf with the location
@@ -80,16 +88,16 @@ export class Utils {
 
     static get(arr: any, path: string = null): any {
         if (path) {
-            let paths = path.split('.')
-            let first: string | number = paths.shift()
+            let paths = path.split('.');
+            let first: string | number = paths.shift();
             if (/^[1-9]+\d*$/.test(first)) {
                 first = parseInt(first)
             }
             if (arr.hasOwnProperty(first)) {
-                let pointer: any = arr[first]
-                if(paths.length === 0){
+                let pointer: any = arr[first];
+                if (paths.length === 0) {
                     return pointer
-                }else{
+                } else {
                     return Utils.get(pointer, paths.join('.'))
                 }
             } else {
@@ -103,8 +111,8 @@ export class Utils {
     }
 
     static splitTyped(arr: string, sep: string = '.'): any[] {
-        let paths = arr.split('.')
-        let normPaths: any[] = []
+        let paths = arr.split('.');
+        let normPaths: any[] = [];
         paths.forEach(function (_x) {
             if (typeof _x === 'string' && /\d+/.test(_x)) {
                 normPaths.push(parseInt(_x))
@@ -112,21 +120,21 @@ export class Utils {
                 normPaths.push(_x)
             }
 
-        })
+        });
         return normPaths
     }
 
     static set(arr: any, path: string | any[], value: any): boolean {
-        let paths = null
-        let first: string | number = null
+        let paths = null;
+        let first: string | number = null;
 
         if (typeof path === 'string') {
             paths = Utils.splitTyped(path)
         } else {
             paths = path
         }
-        first = paths.shift()
-        let next = paths.length > 0 ? paths[0] : null
+        first = paths.shift();
+        let next = paths.length > 0 ? paths[0] : null;
 
 
         if (!arr.hasOwnProperty(first)) {
@@ -164,19 +172,26 @@ export class Utils {
         if (paths.length > 0) {
             return Utils.set(arr[first], paths, value)
         } else {
-            arr[first] = value
+            arr[first] = value;
             return true
         }
     }
 
+    static isArray(o: any) {
+        return _.isArray(o)
+    }
 
     static isObject(o: any) {
-        return typeof o === 'object'
+        return _.isObject(o)
     }
 
 
     static isString(o: any) {
-        return typeof o === 'string'
+        return _.isString(o)
     }
 
+
+    static isEmpty(o: any) {
+        return _.isEmpty(o)
+    }
 }

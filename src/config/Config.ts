@@ -10,6 +10,7 @@ import {FileSupport} from "../filesupport/FileSupport";
 import {IJarOptions} from "./IJarOptions";
 import {DEFAULT_JAR_NAME} from "../types";
 import {ConfigSupport} from "./ConfigSupport";
+import {InterpolationSupport} from "../supports/InterpolationSupport";
 
 
 export class Config {
@@ -22,15 +23,15 @@ export class Config {
                 type: 'system'
             }
         ]
-    }
+    };
 
-    private static $self: Config = null
+    private static $self: Config = null;
 
     private $options: IOptions = {};
 
     private $jars: { [k: string]: ConfigJar } = {};
 
-    private $init: boolean = false
+    private $init: boolean = false;
 
 
     private constructor() {
@@ -59,13 +60,14 @@ export class Config {
     }
 
     _jar(name: string | IJarOptions = 'default', jar?: ConfigJar, override: boolean = false): ConfigJar {
-        let options: IJarOptions = {namespace: DEFAULT_JAR_NAME}
-        let _name: string = null
+        let options: IJarOptions = {namespace: DEFAULT_JAR_NAME};
+        let _name: string = null;
         if (!Utils.isString(name)) {
-            options = <IJarOptions>name
+            options = <IJarOptions>name;
             _name = options.namespace
         } else {
-            _name = <string>name
+            _name = <string>name;
+            options.namespace = _name
         }
 
         if (this.$jars[_name] && !jar) {
@@ -92,12 +94,17 @@ export class Config {
     }
 
     get _jars(): ConfigJar[] {
-        let self = this
-        let jars: ConfigJar[] = []
+        let self = this;
+        let jars: ConfigJar[] = [];
         Object.keys(this.$jars).forEach(k => {
             jars.push(self.$jars[k])
-        })
+        });
         return jars
+    }
+
+
+    static all(): IConfigData[] {
+        return this.instance(false)._jarsData
     }
 
     static get jarsData(): IConfigData[] {
@@ -105,11 +112,11 @@ export class Config {
     }
 
     get _jarsData(): IConfigData[] {
-        let self = this
-        let jars: IConfigData[] = []
+        let self = this;
+        let jars: IConfigData[] = [];
         Object.keys(this.$jars).forEach(k => {
             jars.push(self.$jars[k].data)
-        })
+        });
         return jars
     }
 
@@ -122,22 +129,28 @@ export class Config {
         return !!this.$jars[name]
     }
 
-    static options(options: IOptions = {}, append: boolean = true) {
-        this.instance()._options(options, append)
+    static options(options: IOptions = null, append: boolean = true): IOptions {
+        return this.instance()._options(options, append)
     }
 
 
-    _options(options: IOptions = {}, append: boolean = true) {
-        let self = this
-        this.$init = true
+    _options(options: IOptions = null, append: boolean = true): IOptions {
+        if (options == null) {
+            return this.$options
+        }
+
+        let self = this;
+        this.$init = true;
 
         if (append) {
             this.$options = Utils.merge(this.$options, options)
         } else {
             // clear current jars
-            this.$jars = {}
+            this.$jars = {};
             Object.assign(this.$options, options)
         }
+
+
 
         if (this.$options.fileSupport) {
             FileSupport.reload(this.$options.fileSupport)
@@ -146,38 +159,77 @@ export class Config {
         if (!this.$options.handlers || this.$options.handlers.length === 0) {
             this.$options.handlers = ConfigHandler.DEFAULT_HANDLER
         }
-        ConfigHandler.reload(this.$options.handlers)
 
-        this.$options.configs.forEach(_config => {
-            let handler: ConfigSupport<any> = ConfigHandler.getHandlerByType(_config.type, _config, self._jarsData)
+        ConfigHandler.reload(this.$options.handlers);
+
+
+
+        for (let _config of this.$options.configs) {
+            let handler: ConfigSupport<any> = ConfigHandler.getHandlerByType(_config.type, _config, self._jarsData);
             if (handler) {
-                handler.create()
+                let jar = handler.create();
 
+                if (jar) {
+                    _config.state = true;
+                    if (Utils.isArray(jar)) {
+                        for (let _jar of <ConfigJar[]>jar) {
+                            let _inst_jar = Config.jar(_jar.namespace);
+                            InterpolationSupport.exec(_config, _inst_jar.data);
+                            _inst_jar.merge(_jar.data);
+                            _inst_jar.sources(_jar.sources())
+                        }
+                    } else {
+                        let _jar = <ConfigJar>jar;
+                        let _inst_jar = Config.jar(_jar.namespace);
+                        InterpolationSupport.exec(_config, _inst_jar.data);
+                        // InterpolationSupport.exec(_inst_jar.data,this._jarsData);
+                        _inst_jar.merge(_jar.data);
+                        _inst_jar.sources(_jar.sources())
+                    }
+                } else {
+                    _config.state = false
+                }
             } else {
                 throw new Error('handler doesn\'t exists')
             }
-        })
+        }
+        return this.$options
     }
 
 
-    static get(path: string, namespace?: string) {
-        let jars: ConfigJar[] = this.jars
-        if (namespace) {
-            jars = [this.jar(namespace)]
-        } else {
-            jars = this.jars
+    static get(path: string = null, namespace_or_fallback?: any, fallback?: any) {
+        if (path == null) {
+            return this.jarsData;
         }
-        let _value: any
+        let jars: ConfigJar[] = this.jars;
+
+        if (Utils.isString(namespace_or_fallback) && this.hasJar(namespace_or_fallback)) {
+            jars = [this.jar(namespace_or_fallback)];
+        } else {
+            fallback = namespace_or_fallback;
+            jars = this.jars;
+        }
+
+        let _value: any = null;
         for (let i = 0; i < jars.length; i++) {
-            _value = jars[i].get(path)
+            _value = jars[i].get(path);
             if (_value) break;
         }
-        return _value
+
+        if (!_value && fallback) {
+            return fallback;
+        }
+        return _value;
     }
 
+
     static set(path: string, value: any, namespace: string = 'default'): boolean {
-        let jar: ConfigJar = Config.jar(namespace)
+        let jar: ConfigJar = Config.jar(namespace);
         return jar.set(path, value)
+    }
+
+    static clear(): void {
+        this.$self = null
     }
 
 

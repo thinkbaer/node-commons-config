@@ -20,7 +20,7 @@ export class YamlFileSupport implements IFileSupport {
     }
 
     parse(content: string): IConfigData {
-        let cfg : IConfigData = null
+        let cfg : IConfigData = null;
         if (Yaml) {
             cfg = Yaml.load(content);
         }

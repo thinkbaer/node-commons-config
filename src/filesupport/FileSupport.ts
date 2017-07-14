@@ -18,7 +18,7 @@ export class FileSupport {
         JsonFileSupport,
         YamlFileSupport,
         XmlFileSupport
-    ]
+    ];
 
     private static $supports: IFileSupportInfo[] = [];
 
@@ -29,7 +29,7 @@ export class FileSupport {
      * @param directories
      */
     static reload(directories: StringOrFunction | StringOrFunction[] = FileSupport.DEFAULT_TYPES): boolean {
-        this.reset()
+        this.reset();
 
         if (!Array.isArray(directories)) {
             directories = [directories]
@@ -44,18 +44,18 @@ export class FileSupport {
                 enabled: false,
                 parseable: false,
                 readable: false,
-            }
+            };
 
-            let l: any = {}
+            let l: any = {};
             try {
                 l = Reflect.construct(klass, [])
             } catch (err) {
-                console.error(err)
+                console.error(err);
                 return;
             }
 
             if (l.supportedTypes !== undefined) {
-                let types = l.supportedTypes()
+                let types = l.supportedTypes();
                 if (typeof types === 'string') {
                     info.ext = [types]
                 } else {
@@ -67,7 +67,7 @@ export class FileSupport {
 
             if (l.requirements !== undefined) {
                 try {
-                    l.requirements()
+                    l.requirements();
                     info.enabled = true
                 } catch (e) {
                     console.log('WARNING: executing requirements for ' + l + ' failed, this types cannot be loaded')
@@ -76,21 +76,21 @@ export class FileSupport {
                 info.enabled = true
             }
 
-            info.readable = l.read !== undefined
-            info.parseable = l.parse !== undefined
+            info.readable = l.read !== undefined;
+            info.parseable = l.parse !== undefined;
             FileSupport.$supports.unshift(info)
-        })
+        });
 
         return FileSupport.$supports.length > 0
     }
 
     static getSupportedTypes(force_all: boolean = false): string[] {
-        let types: string[] = []
+        let types: string[] = [];
         FileSupport.$supports.forEach((_x) => {
             if (_x.enabled || force_all) {
                 types = types.concat(_x.ext)
             }
-        })
+        });
         return Utils.unique_array(types)
     }
 
@@ -108,7 +108,7 @@ export class FileSupport {
     }
 
     static getSupportByExtension(ext: string): IFileSupport {
-        let info = FileSupport.getInfoByExtension(ext)
+        let info = FileSupport.getInfoByExtension(ext);
         if (info) {
             return Reflect.construct(info.klass, [])
         }

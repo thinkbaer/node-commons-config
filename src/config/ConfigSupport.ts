@@ -10,11 +10,15 @@ export abstract class ConfigSupport<T> {
     $options:T;
 
     constructor(options : T, jarsData:IConfigData[]=[]) {
-        this.$options = options
+        this.$options = options;
 
         // if not globally definied then load directly
         if (options && options['type'] != 'system' && jarsData && jarsData.length > 0) {
-            InterpolationSupport.exec(this.$options, jarsData)
+            try{
+                InterpolationSupport.exec(this.$options, jarsData)
+            }catch(e){
+
+            }
         }
 
     }

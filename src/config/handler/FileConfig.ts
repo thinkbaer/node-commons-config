@@ -7,8 +7,6 @@ import {FileSupport} from "../../filesupport/FileSupport";
 import {PlatformTools} from "../../utils/PlatformTools";
 import {IConfigData} from "../IConfigData";
 
-import {Config} from "../Config";
-
 import {IFilePath} from "./IFilePath";
 import {FileSource} from "./FileSource";
 import {IJarOptions} from "../IJarOptions";
@@ -30,13 +28,13 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
 
 
     private readFile(file: IFilePath): IConfigData {
-        let supportedTypes = FileSupport.getSupportedTypes()
-        let used_path = null
-        let used_ext = null
+        let supportedTypes = FileSupport.getSupportedTypes();
+        let used_path = null;
+        let used_ext = null;
 
         while (!used_ext && supportedTypes.length > 0) {
-            let ext = supportedTypes.shift()
-            used_path = file.dirname + '/' + file.filename + '.' + ext
+            let ext = supportedTypes.shift();
+            used_path = file.dirname + '/' + file.filename + '.' + ext;
             if (PlatformTools.fileExist(used_path)) {
                 used_ext = ext
             }
@@ -46,20 +44,20 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
             return null
         }
 
-        file.type = used_ext
-        let supportInfo = FileSupport.getInfoByExtension(used_ext)
+        file.type = used_ext;
+        let supportInfo = FileSupport.getInfoByExtension(used_ext);
         if (!supportInfo.enabled) {
             throw new Error(`${used_ext} support not enabled`)
         }
 
-        let support = FileSupport.getSupportByExtension(used_ext)
-        let content: any = null
-        let data: IConfigData = null
+        let support = FileSupport.getSupportByExtension(used_ext);
+        let content: any = null;
+        let data: IConfigData = null;
 
         if (supportInfo.readable) {
             data = support.read(used_path)
         } else if (supportInfo.parseable) {
-            content = fs.readFileSync(used_path, 'UTF-8')
+            content = fs.readFileSync(used_path, 'UTF-8');
             data = support.parse(content)
         } else {
             throw new Error('is not readable or parseable')
@@ -69,11 +67,11 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
     }
 
     private readFiles(paths: IFilePath[]): FileSource[] {
-        let self = this
-        let collection: FileSource[] = []
+        let self = this;
+        let collection: FileSource[] = [];
 
         paths.forEach((path, index) => {
-            let data = self.readFile(path)
+            let data = self.readFile(path);
             if(data === null){
                 // file not found
                 return;
@@ -86,10 +84,10 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
             } else
             */
             if (data) {
-                let source = new FileSource({data: data, file: path, prefix: this.$options.prefix})
+                let source = new FileSource({data: data, file: path, prefix: this.$options.prefix});
                 collection.push(source)
             }
-        })
+        });
 
         return collection;
     }
@@ -97,14 +95,14 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
     private explodeFilePath(path: string | IFilePath): IFilePath {
         let file: IFilePath = null;
         if (typeof path === 'string') {
-            let filepath = PlatformTools.pathNormilize(PlatformTools.pathResolve(path))
+            let filepath = PlatformTools.pathNormilize(PlatformTools.pathResolve(path));
             file = {
                 dirname: PlatformTools.dirname(filepath),
                 filename: PlatformTools.filename(filepath),
                 type: PlatformTools.pathExtname(filepath),
             }
         } else {
-            file = path
+            file = path;
             file.dirname = PlatformTools.pathNormilize(PlatformTools.pathResolve(file.dirname))
             // TODO check if extension is falsely set in filename
         }
@@ -114,9 +112,9 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
 
     private attachPatternFiles(basefile: IFilePath): IFilePath[] {
 
-        let files: IFilePath[] = []
+        let files: IFilePath[] = [];
         if (this.$options.pattern) {
-            let self = this
+            let self = this;
 
 
             this.$options.pattern.forEach(pattern => {
@@ -137,21 +135,25 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
 
 
     create(): ConfigJar {
-        let files: IFilePath[] = []
-        let basefile = this.explodeFilePath(this.$options.file)
-        files.push(basefile)
+        let files: IFilePath[] = [];
+        let basefile = this.explodeFilePath(this.$options.file);
+        files.push(basefile);
 
-        let additional_files = this.attachPatternFiles(basefile)
+        let additional_files = this.attachPatternFiles(basefile);
         if (additional_files.length) {
             files = files.concat(additional_files)
         }
 
-        let sources = this.readFiles(files)
-        let jar = Config.jar(<IJarOptions>this.$options)
+        let sources = this.readFiles(files);
 
+        if(sources.length == 0){
+            return null
+        }
+
+        let jar = ConfigJar.create(<IJarOptions>this.$options);
         sources.forEach(_source => {
             jar.merge(_source)
-        })
+        });
         return jar
     }
 

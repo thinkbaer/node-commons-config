@@ -7,7 +7,7 @@ import {IConfigOptions} from "../IConfigOptions";
 
 import {Utils} from "../../utils/Utils";
 import {ConfigSupport} from "../ConfigSupport";
-import {Config} from "../Config";
+
 import {Source} from "../Source";
 
 
@@ -33,37 +33,37 @@ export  class SystemConfig extends ConfigSupport<IConfigOptions> {
             hostname: os.hostname(),
             userdir: os.homedir(),
             platform: os.platform(),
-        }
+        };
 
-        jar.merge(new Source({source: 'os', data: _os , prefix:'os'}))
+        jar.merge(new Source({source: 'os', data: _os , prefix:'os'}));
         return jar
     }
 
     private attach_env(jar: ConfigJar) {
 
-        let data = Utils.merge({}, process.env)
-        let configData: IConfigData = {}
+        let data = Utils.merge({}, process.env);
+        let configData: IConfigData = {};
         Object.keys(data).forEach(k => {
             configData[k.toLocaleLowerCase()] = data[k]
-        })
-        jar.merge(new Source({source: 'env', data: configData, prefix:'env'}))
+        });
+        jar.merge(new Source({source: 'env', data: configData, prefix:'env'}));
 
         return jar
     }
 
     private attach_argv(jar: ConfigJar) {
-        let data: IConfigData = {}
-        let i = 0
-        let pl = process.argv.length
+        let data: IConfigData = {};
+        let i = 0;
+        let pl = process.argv.length;
 
         for (let k = 0; k < pl; k++) {
-            let v = process.argv[k]
+            let v = process.argv[k];
             if (/^\-\-/.test(v)) {
-                let n = k + 1
+                let n = k + 1;
                 if (n < pl) {
-                    let next = process.argv[n]
+                    let next = process.argv[n];
                     if (!/^\-\-/.test(next)) {
-                        k++
+                        k++;
                         data[v.replace(/^\-\-/, '')] = next
                     } else {
                         data[v.replace(/^\-\-/, '')] = true
@@ -72,22 +72,22 @@ export  class SystemConfig extends ConfigSupport<IConfigOptions> {
                     data[v.replace(/^\-\-/, '')] = true
                 }
             } else {
-                data['_' + i] = v
+                data['_' + i] = v;
                 i++
             }
         }
 
-        jar.merge(new Source({source: 'argv', data: data, prefix:'argv'}))
+        jar.merge(new Source({source: 'argv', data: data, prefix:'argv'}));
 
         return jar
     }
 
 
     create(): ConfigJar {
-        let jar = Config.jar({namespace:'system'})
-        this.attach_os(jar)
-        this.attach_env(jar)
-        this.attach_argv(jar)
+        let jar = ConfigJar.create({namespace:'system'});
+        this.attach_os(jar);
+        this.attach_env(jar);
+        this.attach_argv(jar);
         return jar
     }
 

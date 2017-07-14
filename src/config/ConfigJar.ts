@@ -22,7 +22,7 @@ const DEFAULT_JAR_OPTS : IJarOptions = {
     namespace: 'default',
     standalone:false,
     interpolate:true
-}
+};
 
 export class ConfigJar {
 
@@ -30,12 +30,12 @@ export class ConfigJar {
 
     // private _config:
 
-    private _data: IConfigData = {}
+    private _data: IConfigData = {};
 
     /**
      *
      */
-    private _source: Source[] = []
+    private _source: Source[] = [];
 
     constructor(options: IJarOptions = DEFAULT_JAR_OPTS) {
         this._options = Utils.merge(DEFAULT_JAR_OPTS,options)
@@ -59,28 +59,29 @@ export class ConfigJar {
 
     merge(data: IConfigData|Source, opts:{interpolate:boolean} = {interpolate:true}){
 
-        let source = data
+        let source = data;
         if(data instanceof Source){
-            source = Utils.clone(data)
-            this._source.push(<Source>source)
-            data = (<Source>source).data
+            source = Utils.clone(data);
+            this._source.push(<Source>source);
+            data = (<Source>source).data;
 
             if((<Source>source).prefix){
-                let _data={}
-                Utils.set(_data,(<Source>source).prefix,data)
+                let _data={};
+                Utils.set(_data,(<Source>source).prefix,data);
                 data = _data
             }
         }
 
+
         if(this._options.interpolate && opts.interpolate){
             // interpolate first then merge
-            let collection:IConfigData[] = Config.jarsData
+            let collection:IConfigData[] = Config.jarsData;
 
             // interpolate against self execute
-            if(!Config.hasJar(this.namespace)){
+            if(!Config.hasJar(this.namespace) && !Utils.isEmpty(this._data)){
                 collection.push(this._data)
             }
-            collection.unshift(data)
+            collection.unshift(data);
             InterpolationSupport.exec(data,collection)
         }
 
@@ -95,7 +96,7 @@ export class ConfigJar {
     }
 
     interpolateAgainst(data:IConfigData){
-        InterpolationSupport.exec(data,this._data)
+        InterpolationSupport.exec(data,this._data);
         return data;
     }
 
@@ -103,8 +104,16 @@ export class ConfigJar {
         if(!options.namespace){
             options.namespace = 'default'
         }
-        let jar = new ConfigJar(options)
+        let jar = new ConfigJar(options);
         return jar
+    }
+
+
+    sources(source?:Source[]): Source[]{
+        if(source){
+            this._source = this._source.concat(source)
+        }
+        return this._source
     }
 
 }

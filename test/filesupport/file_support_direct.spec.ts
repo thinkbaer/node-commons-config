@@ -1,6 +1,6 @@
 
 import * as mocha from 'mocha';
-describe('',()=>{})
+describe('',()=>{});
 
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
@@ -19,7 +19,7 @@ class FileSupportTests {
     @test
     'load predefined types' (){
         // Default
-        let test = new JsonFileSupport()
+        let test = new JsonFileSupport();
         let res = FileSupport.reload()
     }
 

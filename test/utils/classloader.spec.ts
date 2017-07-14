@@ -1,6 +1,6 @@
 import * as mocha from 'mocha';
 describe('', () => {
-})
+});
 
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
@@ -19,16 +19,16 @@ class ClassLoaderTests {
     @test
     'import classes from any'() {
         let res = ClassLoader.importClassesFromAny(
-            [__dirname + '/../../src/filesupport/types/JsonFileSupport.ts'])
-        expect(res.length).to.be.eq(1)
+            [__dirname + '/../../src/filesupport/types/JsonFileSupport.ts']);
+        expect(res.length).to.be.eq(1);
 
 
         res = ClassLoader.importClassesFromAny(
-            [__dirname + '/../../src/filesupport/types/*.ts'])
-        expect(res.length).to.not.eq(0)
+            [__dirname + '/../../src/filesupport/types/*.ts']);
+        expect(res.length).to.not.eq(0);
 
         res = ClassLoader.importClassesFromAny(
-            [JsonFileSupport])
+            [JsonFileSupport]);
         expect(res.length).to.not.eq(0)
     }
 

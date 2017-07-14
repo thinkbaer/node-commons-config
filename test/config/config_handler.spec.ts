@@ -1,6 +1,6 @@
 import * as mocha from 'mocha';
 describe('', () => {
-})
+});
 
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
@@ -16,7 +16,7 @@ class ConfigHandlerTests {
 
     @test
     'reloading handler'() {
-        ConfigHandler.reload()
+        ConfigHandler.reload();
         expect(ConfigHandler.amount()).to.not.eq(0)
 
     }

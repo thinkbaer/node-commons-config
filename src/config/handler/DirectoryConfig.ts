@@ -39,12 +39,11 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
 
         suffixPattern: []
 
-    }
-
+    };
 
 
     constructor(options: IDirectoryConfigOptions, jarsData:IConfigData[]=[]) {
-        super(Utils.merge(DirectoryConfig.DEFAULT_DIRECTORY_OPTIONS, options),jarsData)
+        super(Utils.merge(DirectoryConfig.DEFAULT_DIRECTORY_OPTIONS,options || {}),jarsData)
     }
 
     type(): string {
@@ -52,40 +51,40 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
     }
 
     listFilesInDirectory(): IFileConfigOptions[] {
-        let dirname = PlatformTools.pathNormAndResolve(this.$options.dirname)
+        let dirname = PlatformTools.pathNormAndResolve(this.$options.dirname);
         if (!PlatformTools.fileExist(dirname) || !PlatformTools.isDir(dirname)) {
             throw new Error('wrong directory ' + dirname)
         }
-        let list: string[] = PlatformTools.load("glob").sync(dirname + '/**')
+        let list: string[] = PlatformTools.load("glob").sync(dirname + '/**');
         let regex: string = Utils.escapeRegExp(this.$options.patternSeparator);
 
         let patternRegex = new RegExp(regex, 'g');
-        let files: IFileConfigOptions[] = []
-        let self = this
+        let files: IFileConfigOptions[] = [];
+        let self = this;
 
         list.forEach(file_or_dir => {
-            let path = file_or_dir.replace(dirname + '', '')
+            let path = file_or_dir.replace(dirname + '', '');
 
             if (!path) {
                 // equals dirname
                 return;
             }
 
-            path = path.replace(/^\//, '')
+            path = path.replace(/^\//, '');
             if(self.$options.exclude && self.$options.exclude.length > 0){
                 // findes if path is excluded
-                let result = multimatch([path],self.$options.exclude)
+                let result = multimatch([path],self.$options.exclude);
                 if(result.length && result[0] == path){
                     return
                 }
             }
 
-            let is_file = PlatformTools.isFile(file_or_dir)
-            let paths = path.replace(/^\//, '').split('/')
+            let is_file = PlatformTools.isFile(file_or_dir);
+            let paths = path.replace(/^\//, '').split('/');
 
             if (is_file) {
-                let filename_ext = paths.pop()
-                let filename = PlatformTools.filename(filename_ext)
+                let filename_ext = paths.pop();
+                let filename = PlatformTools.filename(filename_ext);
 
                 if (!patternRegex.test(filename)) {
 
@@ -93,27 +92,27 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
                         dirname: file_or_dir.replace(filename_ext, ''),
                         filename: filename,
                         type: PlatformTools.pathExtname(filename_ext, false)
-                    }
+                    };
 
                     let fileCfg: IFileConfigOptions = {
                         namespace: DEFAULT_JAR_NAME,
                         file: file,
                         pattern: []
-                    }
+                    };
 
-                    let prefixing = DirectoryConfig.resolveName(self.$options.prefixing, paths, filename, SELECTOR_SEPARATOR)
+                    let prefixing = DirectoryConfig.resolveName(self.$options.prefixing, paths, filename, SELECTOR_SEPARATOR);
                     if (prefixing) {
                         fileCfg.prefix = prefixing
                     }
 
-                    let namespacing = DirectoryConfig.resolveName(self.$options.namespaceing, paths, filename, self.$options.namespaceSeparator)
+                    let namespacing = DirectoryConfig.resolveName(self.$options.namespaceing, paths, filename, self.$options.namespaceSeparator);
                     if (namespacing) {
                         fileCfg.namespace = namespacing
                     }
 
                     if (this.$options.suffixPattern) {
                         this.$options.suffixPattern.forEach(pattern => {
-                            let _paths = [filename, pattern]
+                            let _paths = [filename, pattern];
                             fileCfg.pattern.push(_paths.join(self.$options.patternSeparator))
                         })
                     }
@@ -123,28 +122,28 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
 
             }
 
-        })
+        });
 
         return files
     }
 
     static resolveName(named: NamingResolvePattern, paths: string[], filename: string, separator: string = '.'): string {
-        let v = null
+        let v = null;
         if (named) {
-            let _paths = Utils.clone(paths)
+            let _paths = Utils.clone(paths);
             switch (named) {
                 case NAMING_BY_DIRECTORY:
-                    v = _paths.pop()
+                    v = _paths.pop();
                     break;
                 case NAMING_BY_DIRECTORYPATH:
-                    v = _paths.join(separator)
+                    v = _paths.join(separator);
                     break;
                 case NAMING_BY_FILENAME:
-                    v = filename
+                    v = filename;
                     break;
                 case NAMING_BY_FULLPATH:
-                    _paths.push(filename)
-                    v = _paths.join(separator)
+                    _paths.push(filename);
+                    v = _paths.join(separator);
                     break;
             }
         }
@@ -153,19 +152,25 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
 
 
     create(): ConfigJar[] {
-        let files = this.listFilesInDirectory()
-        let jars:{[k:string]:ConfigJar} = {}
+        let files = this.listFilesInDirectory();
+        let jars:{[k:string]:ConfigJar} = {};
 
         files.forEach(_options => {
-            let fileCfg = new FileConfig(_options)
-            let jar = fileCfg.create()
-            jars[jar.namespace] = jar
-        })
+            let fileCfg = new FileConfig(_options);
+            let jar = fileCfg.create();
+            if(jars[jar.namespace]){
+                jars[jar.namespace].merge(jar.data)
+                jars[jar.namespace].sources(jar.sources())
+            }else{
+                jars[jar.namespace] = jar
+            }
 
-        let _jars:ConfigJar[] = []
+        });
+
+        let _jars:ConfigJar[] = [];
         Object.keys(jars).forEach(_k => {
             _jars.push(jars[_k])
-        })
+        });
 
         return _jars
     }

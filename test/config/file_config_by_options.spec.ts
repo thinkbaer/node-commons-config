@@ -1,6 +1,6 @@
 import * as mocha from 'mocha';
 describe('', () => {
-})
+});
 
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
@@ -14,7 +14,7 @@ import {IFileConfigOptions} from "../../src/config/handler/IFileConfigOptions";
 import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
 import {PlatformTools} from "../../src/utils/PlatformTools";
 
-const SUBTESTPATH:string = 'testfolders/file/config'
+const SUBTESTPATH: string = 'testfolders/file/config';
 
 @suite('config/handler/FileConfig loaded by Config.options')
 class FileConfigTests {
@@ -23,24 +23,25 @@ class FileConfigTests {
     @test
     'load by options'() {
         // config
-        Config['$self'] = null
-        Config.options({
+        Config.clear();
+        let opts = Config.options({
             configs: [
                 <IFileConfigOptions>{
                     type: 'file',
                     file: `./test/${SUBTESTPATH}/default.json`
                 }
             ]
-        })
+        });
 
-        let opts = Config.instance()[ '$options' ]
-        expect(opts.configs.length).to.eq(1)
-        expect(opts.handlers.length).to.eq(2)
-        expect(opts.fileSupport.length).to.eq(3)
+//        let opts = Config.instance()['$options'];
+
+        expect(opts.configs.length).to.eq(2);
+        expect(opts.handlers.length).to.eq(3);
+        expect(opts.fileSupport.length).to.eq(3);
 
 
         // config with extending current settings
-        Config['$self'] = null
+        Config['$self'] = null;
         Config.options({
             handlers: ['./src/config/handler/FileConfig.ts'],
             fileSupport: [JsonFileSupport],
@@ -50,15 +51,15 @@ class FileConfigTests {
                 file: `./test/${SUBTESTPATH}/default.json`
             }]
 
-        })
-        opts = Config.instance()['$options']
-        expect(opts.configs.length).to.eq(1)
-        expect(opts.handlers.length).to.gt(2)
-        expect(opts.fileSupport.length).to.not.eq(0)
+        });
+        opts = Config.instance()['$options'];
+        expect(opts.configs.length).to.eq(2);
+        expect(opts.handlers.length).to.eq(2);
+        expect(opts.fileSupport.length).to.not.eq(0);
 
 
         // config with overriding current settings
-        Config['$self'] = null
+        Config['$self'] = null;
         Config.options({
             handlers: ['./src/config/handler/FileConfig.ts'],
             fileSupport: [JsonFileSupport],
@@ -68,15 +69,15 @@ class FileConfigTests {
                 file: `./test/${SUBTESTPATH}/default.json`
             }]
 
-        }, false)
-        opts = Config.instance()['$options']
-        expect(opts.configs.length).to.eq(1)
-        expect(opts.handlers.length).to.eq(1)
-        expect(opts.fileSupport.length).to.eq(1)
+        }, false);
+        opts = Config.instance()['$options'];
+        expect(opts.configs.length).to.eq(1);
+        expect(opts.handlers.length).to.eq(1);
+        expect(opts.fileSupport.length).to.eq(1);
 
 
         // config with overriding current settings with file path
-        Config['$self'] = null
+        Config['$self'] = null;
         Config.options({
             handlers: ['./src/config/handler/FileConfig.ts'],
             fileSupport: [JsonFileSupport],
@@ -88,29 +89,29 @@ class FileConfigTests {
                     filename: 'default'
                 }
             }]
-        }, false)
-        opts = Config.instance()['$options']
+        }, false);
+        opts = Config.instance()['$options'];
 
-        let jars = Config.instance()['$jars']
-        let keys = Object.keys(jars)
-        expect(keys.length).to.eq(1)
-        let first_key = keys.shift()
-        expect(opts.configs.length).to.eq(1)
-        expect(opts.handlers.length).to.eq(1)
-        expect(opts.fileSupport.length).to.eq(1)
+        let jars = Config.instance()['$jars'];
+        let keys = Object.keys(jars);
+        expect(keys.length).to.eq(1);
+        let first_key = keys.shift();
+        expect(opts.configs.length).to.eq(1);
+        expect(opts.handlers.length).to.eq(1);
+        expect(opts.fileSupport.length).to.eq(1);
 
-        expect(first_key).to.eq('other')
-        expect(jars[first_key]['_source'][0].source).to.eq('file')
-        expect(jars[first_key]['_source'][0]['file'].dirname).to.eq(PlatformTools.pathNormilize(__dirname + `/../${SUBTESTPATH}`))
-        expect(jars[first_key]['_source'][0]['file'].filename).to.eq('default')
-        expect(jars[first_key]['_source'][0]['file'].type).to.eq('json')
+        expect(first_key).to.eq('other');
+        expect(jars[first_key]['_source'][0].source).to.eq('file');
+        expect(jars[first_key]['_source'][0]['file'].dirname).to.eq(PlatformTools.pathNormilize(__dirname + `/../${SUBTESTPATH}`));
+        expect(jars[first_key]['_source'][0]['file'].filename).to.eq('default');
+        expect(jars[first_key]['_source'][0]['file'].type).to.eq('json');
 
-        expect(Config.get('hallo')).to.eq('welt')
+        expect(Config.get('hallo')).to.eq('welt');
 
 
-        Config['$self'] = null
-        process.env.hostname = 'testhost'
-        process.env.stage = 'testing'
+        Config['$self'] = null;
+        process.env.hostname = 'testhost';
+        process.env.stage = 'testing';
         Config.options({
             handlers: [
                 './src/config/handler/FileConfig.ts',
@@ -139,4 +140,44 @@ class FileConfigTests {
         }, false)
     }
 
+    @test
+    'failed loading by options'() {
+        process.env['configfile'] = './file_not_exits.json';
+        Config.clear();
+        let opts = Config.options({configs: [{type: 'file', file: './relativ_wrong_file.json'}]});
+
+        expect(opts.configs).has.length(2);
+        expect(opts.configs).to.deep.include({type: 'system', state: true});
+        expect(opts.configs).to.deep.include({type: 'file', file: './relativ_wrong_file.json', state: false});
+
+        // Interpolation arguments not set!
+        Config.clear();
+        opts = Config.options({configs: [{type: 'file', file: '${argv.configfile2}'}]});
+
+        expect(opts.configs).has.length(2);
+        expect(opts.configs).to.deep.include({type: 'system', state: true});
+        expect(opts.configs).to.deep.include({type: 'file', file: '${argv.configfile2}', state: false});
+
+        // Interpolation arguments is set, but file doesn't exists!
+        Config.clear();
+        opts = Config.options({configs: [{type: 'file', file: '${env.configfile}'}]});
+
+        expect(opts.configs).has.length(2);
+        expect(opts.configs).to.deep.include({type: 'system', state: true});
+        expect(opts.configs).to.deep.include({type: 'file', file: './file_not_exits.json', state: false});
+
+        // Interpolation arguments is set, but file doesn't exists!
+        Config.clear();
+        process.env['configfile'] = `./test/${SUBTESTPATH}/default.json`;
+        opts = Config.options({configs: [{type: 'file', file: '${env.configfile}'}]});
+
+        expect(opts.configs).has.length(2);
+        expect(opts.configs).to.deep.include({type: 'system', state: true});
+        expect(opts.configs).to.deep.include({
+            type: 'file',
+            file: process.env['configfile'],
+            state: true,
+            namespace: 'default'
+        })
+    }
 }

@@ -1,6 +1,6 @@
 
 import * as mocha from 'mocha';
-describe('',()=>{})
+describe('',()=>{});
 
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
@@ -22,23 +22,23 @@ class YamlSupportTests {
 
     @test
     'libaries must exist' (){
-        let reader = new YamlFileSupport()
+        let reader = new YamlFileSupport();
         reader.requirements()
     }
 
     @test
     'supports types' (){
-        let reader = new YamlFileSupport()
-        let types = reader.supportedTypes()
-        expect(Array.isArray(types)).to.be.true
-        expect(types).to.contain('yml')
+        let reader = new YamlFileSupport();
+        let types = reader.supportedTypes();
+        expect(Array.isArray(types)).to.be.true;
+        expect(types).to.contain('yml');
         expect(types).to.contain('yaml')
     }
 
     @test
     'parse simple' (){
-        let reader = new YamlFileSupport()
-        let data = reader.parse('hallo: welt')
+        let reader = new YamlFileSupport();
+        let data = reader.parse('hallo: welt');
         expect(data).to.deep.eq({hallo:'welt'})
     }
 

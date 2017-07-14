@@ -1,5 +1,5 @@
 import * as mocha from 'mocha';
-describe('', () => {})
+describe('', () => {});
 
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
@@ -14,13 +14,13 @@ class ConfigInterpolationTests {
 
     @test
     'config support interpolation'() {
-        process.argv.push('--configfile', __dirname + '/../testfolders/file/config/default.json')
-        Config['$self'] = null
+        process.argv.push('--configfile', __dirname + '/../testfolders/file/config/default.json');
+        Config['$self'] = null;
         Config.options({
             configs: [
                 {type: 'file', file: '${argv.configfile}'}
             ]
-        })
+        });
 
         // console.log(inspect(Config.jarsData,false,10))
 
