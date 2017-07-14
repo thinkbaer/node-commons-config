@@ -36,6 +36,12 @@ export * from './config/handler/IFileConfigOptions'
 export * from './config/handler/FileSource'
 export * from './config/handler/FileConfig'
 
+// DirectoryConfig
+export * from './config/handler/IDirectoryConfigOptions'
+export * from './config/handler/DirectoryConfig'
+
 // InterpolationSupport
 export * from './supports/InterpolationSupport'
+
+
 
