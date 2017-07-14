@@ -1,13 +1,9 @@
 import {ClassLoader} from "../utils/ClassLoader";
-
-
 import {StringOrFunction} from "../types";
-
 import {SystemConfig} from "./handler/SystemConfig";
 import {FileConfig} from "./handler/FileConfig";
 import {ConfigSupport} from "./ConfigSupport";
 import {IConfigOptions} from "./IConfigOptions";
-
 import {IConfigData} from "./IConfigData";
 import {DirectoryConfig} from "./handler/DirectoryConfig";
 

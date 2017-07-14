@@ -1,18 +1,20 @@
 {
   "compilerOptions": {
     "lib": [
-      "es5","es6"
+      "es5",
+      "es6"
     ],
+    "rootDir": ".",
     "outDir": "./build/compiled",
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es6",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "preserveConstEnums": true,
-    "pretty":true,
-    "declaration":true,
+    "pretty": true,
+    "declaration": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "stripInternal": true,
@@ -26,7 +28,8 @@
   "exclude": [
     "node_modules",
     "build",
-    "dist"
+    "dist",
+    "tmp"
   ],
   "compileOnSave": true
 }

@@ -36,7 +36,7 @@ class FileSupportTests {
 
         let reader = FileSupport.getSupportByExtension('json');
         expect(reader,'loading of reader failed').to.exist;
-        expect(reader instanceof JsonFileSupport,'loading of json config reader failed').to.be.true;
+        expect(reader.supportedTypes(),'loading of json config reader failed').to.eq('json');
 
         let json = reader.parse('{"hallo":"welt"}');
         expect(json,'json not correctly parsed').to.be.deep.eq({hallo:'welt'})

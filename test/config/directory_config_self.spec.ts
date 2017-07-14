@@ -112,7 +112,7 @@ class DirectoryConfigTests {
         dirCfg = new DirectoryConfig(opts);
         jars = dirCfg.create();
         // console.log(inspect(jars,false,10))
-        console.log(jars[0]['_source'])
+
         expect(jars.length).to.eq(1);
         expect(jars[0]['_source'].length).to.eq(6);
         expect(jars[0].get('base')).to.eq('default');

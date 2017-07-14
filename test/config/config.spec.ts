@@ -6,7 +6,7 @@ describe('', () => {
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
 import {expect} from "chai";
 import * as os from 'os'
-import {inspect} from 'util'
+
 import {Config} from "../../src/config/Config";
 import {ConfigJar} from "../../src/config/ConfigJar";
 import {IConfigData} from "../../src/config/IConfigData";
