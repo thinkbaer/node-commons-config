@@ -70,7 +70,8 @@ export class FileSupport {
                     l.requirements();
                     info.enabled = true
                 } catch (e) {
-                    console.log('WARNING: executing requirements for ' + l + ' failed, this types cannot be loaded')
+		    // TODO use logger (passthrough logger)
+                    // console.log('WARNING: executing requirements for ' + l + ' failed, this types cannot be loaded')
                 }
             } else {
                 info.enabled = true
