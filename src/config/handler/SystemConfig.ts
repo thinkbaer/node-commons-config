@@ -33,6 +33,7 @@ export  class SystemConfig extends ConfigSupport<IConfigOptions> {
             hostname: os.hostname(),
             userdir: os.homedir(),
             platform: os.platform(),
+            tmpdir:os.tmpdir()
         };
 
         jar.merge(new Source({source: 'os', data: _os , prefix:'os'}));

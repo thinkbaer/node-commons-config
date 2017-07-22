@@ -11,8 +11,8 @@ describe('', () => {
 
 //import * as config from 'config';
 const DEFAULT_CONFIG_LOAD_ORDER = [
-    {type: 'file', file: '${argv.configfile}'},
-    {type: 'file', file: '${env.configfile}'},
+    //{type: 'file', file: '${argv.configfile}'},
+    //{type: 'file', file: '${env.configfile}'},
     {type: 'file', file: '${os.homedir}/.testdir/config.json'},
     {type: 'file', file: './testfile.json'},
 ]
@@ -34,8 +34,10 @@ class Tests {
             //console.error(err)
             expect(err).to.be.null
         }
+        let list = _.filter(options.configs,(x) => {return x.state === true && x.type === 'file'})
 
-        expect(_.filter(options.configs,(x) => {return x.state === true})).to.has.length(2)
+        expect(list).to.has.length(1)
+
         let data:any = Config.all()
         expect(data).to.has.length(2)
         data = data.pop()
