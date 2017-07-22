@@ -61,3 +61,11 @@ Config.options({
     });
 
 ```
+
+[.line-through]#@TASK:{counter:task} 20170722# +
+Utils.walk failed on null or undefined values in trees. Also if in
+Config.options the "configs" key was forgotten, then the config options
+was wrongly merged.
+
+@TASK:{counter:task} 20170722 +
+Message if filetype isn't supported.

@@ -40,6 +40,7 @@ export class Utils {
 
     static walk(root: any, fn: Function) {
         function walk(obj: any, location: any[] = []) {
+            if(obj === null || obj === undefined) return;
 
             Object.keys(obj).forEach((key) => {
 

@@ -1,0 +1,34 @@
+
+logging:
+  enable: true
+  level: debug
+#  events: true
+# transports: - list
+
+storage:
+  type: sqlite
+  database: tmp/database.db
+
+
+rotator:
+
+
+validator:
+  schedule:
+    enable: true
+  judge:
+    selftest: true
+    remote_lookup: true
+    remote_url: http://127.0.0.1:8080
+    judge_url: http://0.0.0.0:8080
+    request:
+      socket_timeout: 10000
+      connection_timeout: 5000
+
+
+provider:
+  schedule:
+    enable: true
+
+
+

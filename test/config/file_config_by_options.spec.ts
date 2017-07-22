@@ -180,4 +180,11 @@ class FileConfigTests {
             namespace: 'default'
         })
     }
+
+    @test
+    'interpolate by system vars'() {
+
+    }
+
+
 }

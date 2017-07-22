@@ -1,3 +1,5 @@
+
+
 import {Utils} from "../utils/Utils";
 
 import {ConfigJar} from "./ConfigJar";
@@ -11,6 +13,7 @@ import {IJarOptions} from "./IJarOptions";
 import {DEFAULT_JAR_NAME} from "../types";
 import {ConfigSupport} from "./ConfigSupport";
 import {InterpolationSupport} from "../supports/InterpolationSupport";
+import {IConfigOptions} from "./IConfigOptions";
 
 
 export class Config {
@@ -134,22 +137,38 @@ export class Config {
     }
 
 
-    _options(options: IOptions = null, append: boolean = true): IOptions {
-        if (options == null) {
+    _options(_options: IOptions = null, append: boolean = true): IOptions {
+        if (_options == null) {
             return this.$options
         }
 
         let self = this;
         this.$init = true;
 
+        let options:IOptions = {}
+        if(!_options.configs){
+            // Test if configs key was ignored
+            if(Utils.isArray(_options) && _options.length > 0){
+                if(_options[0].type){
+                    // okay configs was ignored, prepend it!
+                    options = <IOptions>{configs: _options}
+                }else{
+                    options = {}
+                }
+            }else{
+                options = _options
+            }
+        }else{
+            options = _options
+        }
+
         if (append) {
-            this.$options = Utils.merge(this.$options, options)
+            this.$options = Utils.merge(this.$options,options)
         } else {
             // clear current jars
             this.$jars = {};
             Object.assign(this.$options, options)
         }
-
 
 
         if (this.$options.fileSupport) {
