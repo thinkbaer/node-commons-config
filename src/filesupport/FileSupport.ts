@@ -8,6 +8,7 @@ import {StringOrFunction} from "../types";
 import {JsonFileSupport} from "./types/JsonFileSupport";
 import {XmlFileSupport} from "./types/XmlFileSupport";
 import {YamlFileSupport} from "./types/YamlFileSupport";
+import {PropertiesFileSupport} from "./types/PropertiesFileSupport";
 
 
 /**
@@ -17,7 +18,8 @@ export class FileSupport {
     static DEFAULT_TYPES: StringOrFunction[] = [
         JsonFileSupport,
         YamlFileSupport,
-        XmlFileSupport
+        XmlFileSupport,
+        PropertiesFileSupport
     ];
 
     private static $supports: IFileSupportInfo[] = [];

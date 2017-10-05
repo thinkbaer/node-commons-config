@@ -22,8 +22,9 @@ Feature:
 ## File type support
 
 * Json
-* Yaml
-* Xml
+* Yaml (https://www.npmjs.com/package/yaml or https://www.npmjs.com/package/js-yaml)
+* Xml (https://www.npmjs.com/package/x2js)
+* Properties (https://www.npmjs.com/package/properties)
 * other in development
 
 ## Supported configuration types

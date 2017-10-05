@@ -34,8 +34,8 @@ class Tests {
             //console.error(err)
             expect(err).to.be.null
         }
-        let list = _.filter(options.configs,(x) => {return x.state === true && x.type === 'file'})
 
+        let list = _.filter(options.configs,(x) => {return x.state === true && x.type === 'file'})
         expect(list).to.has.length(1)
 
         let data:any = Config.all()

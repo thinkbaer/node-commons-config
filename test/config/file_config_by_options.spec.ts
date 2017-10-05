@@ -37,7 +37,7 @@ class FileConfigTests {
 
         expect(opts.configs.length).to.eq(2);
         expect(opts.handlers.length).to.eq(3);
-        expect(opts.fileSupport.length).to.eq(3);
+        expect(opts.fileSupport.length).to.eq(4);
 
 
         // config with extending current settings
