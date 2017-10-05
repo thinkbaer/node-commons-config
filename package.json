@@ -1,6 +1,6 @@
 {
   "name": "commons-config",
-  "version": "0.4.4",
+  "version": "0.4.6",
   "description": "Commons-config is a configurable configuration content handler which supports multiple configuration infrastructures and file formats.",
   "main": "index.js",
   "directories": {
