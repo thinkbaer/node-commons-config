@@ -55,6 +55,7 @@
     "mocha": "^3.4.2",
     "mocha-typescript": "^1.1.4",
     "nyc": "^11.0.3",
+    "properties": "^1.2.1",
     "source-map-support": "^0.4.15",
     "ts-node": "^3.2.0",
     "tslint-stylish": "^2.1.0",

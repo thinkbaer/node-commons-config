@@ -1,7 +1,7 @@
 // import {merge, mergeDeep} from "typescript-object-utils";
 import * as merge from 'deepmerge'
 import * as _ from 'lodash'
-import {Options} from "deepmerge";
+
 
 export class Utils {
 
@@ -22,7 +22,7 @@ export class Utils {
         return _.cloneDeep(obj)
     }
 
-    static mergeArray(dest:any[],source:any[],options:Options<any>){
+    static mergeArray(dest:any[],source:any[],options:merge.Options){
         let res = _.concat(dest,source);
         res = _.uniqBy(res,(_r)=>{return JSON.stringify(_r)});
         return res
