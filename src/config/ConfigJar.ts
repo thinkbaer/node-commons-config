@@ -1,22 +1,11 @@
-import {IOptions} from "./IOptions";
-import {FileSupport} from "../filesupport/FileSupport";
 
 import {IConfigData} from "./IConfigData";
-import {IConfigOptions} from "./IConfigOptions";
 import {IJarOptions} from "./IJarOptions";
-import {mergeDeep} from "typescript-object-utils";
+
 import {Utils} from "../utils/Utils";
 import {InterpolationSupport} from "../supports/InterpolationSupport";
 import {Config} from "./Config";
 import {Source} from "./Source";
-/*
-const DEFAULT_OPTIONS: IOptions = {
-    readerDirs: [__dirname + '/../reader/*'],
-    interpolate:true,
-    basename: 'default',
-    dir: 'config'
-}
-*/
 
 const DEFAULT_JAR_OPTS : IJarOptions = {
     namespace: 'default',
