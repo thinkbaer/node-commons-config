@@ -1,7 +1,6 @@
 // Utils
 export * from './utils/Utils'
 export * from './utils/ClassLoader'
-export * from './utils/ConfigUtils'
 export * from './utils/PlatformTools'
 
 // Config
