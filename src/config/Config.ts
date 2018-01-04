@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import {Utils} from "../utils/Utils";
 
 import {ConfigJar} from "./ConfigJar";
@@ -10,6 +11,7 @@ import {IJarOptions} from "./IJarOptions";
 import {DEFAULT_JAR_NAME} from "../types";
 import {ConfigSupport} from "./ConfigSupport";
 import {InterpolationSupport} from "../supports/InterpolationSupport";
+import {PlatformTools} from "../";
 
 
 export class Config {
@@ -52,6 +54,7 @@ export class Config {
   isInitialized() {
     return this.$init
   }
+
 
 
   static jar(name: string | IJarOptions = 'default', jar?: ConfigJar): ConfigJar {
@@ -138,7 +141,6 @@ export class Config {
       return this.$options
     }
 
-    let self = this;
     this.$init = true;
 
     let options: IOptions = {}
@@ -175,10 +177,16 @@ export class Config {
       this.$options.handlers = ConfigHandler.DEFAULT_HANDLER
     }
 
+    if(!_.isEmpty(this.$options.workdir)){
+      PlatformTools.setWorkDir(this.$options.workdir);
+    }else{
+      PlatformTools.setWorkDir(null);
+    }
+
     ConfigHandler.reload(this.$options.handlers);
 
     for (let _config of this.$options.configs) {
-      let handler: ConfigSupport<any> = ConfigHandler.getHandlerByType(_config.type, _config, self._jarsData);
+      let handler: ConfigSupport<any> = ConfigHandler.getHandlerByType(_config.type, _config, this._jarsData);
       if (handler) {
         let jar = handler.create();
 
@@ -242,7 +250,8 @@ export class Config {
   }
 
   static clear(): void {
-    this.$self = null
+    this.$self = null;
+    PlatformTools.setWorkDir(null);
   }
 
 

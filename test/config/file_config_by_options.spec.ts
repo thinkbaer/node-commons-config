@@ -200,4 +200,26 @@ class FileConfigTests {
   }
 
 
+  @test
+  'set workdir'() {
+    Config.clear();
+    let dir = `./test/${SUBTESTPATH}`;
+    let opts = Config.options({
+      workdir:dir,
+      configs: [{type: 'file', file: './app.json'}]
+    });
+
+    expect(opts.workdir).to.eq('./test/testfolders/file/config');
+    expect(opts.configs).to.deep.include({
+      type: 'file',
+      file: './app.json',
+      state: true,
+      namespace: 'default'
+    });
+
+    let name = Config.get('appname');
+    expect(name).to.eq('hallo');
+  }
+
+
 }
