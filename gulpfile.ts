@@ -3,7 +3,7 @@
 ///<reference path="node_modules/@types/mocha/index.d.ts"/>
 
 
-import {Gulpclass, Task, SequenceTask, MergedTask} from "gulpclass";
+import {Gulpclass, MergedTask, SequenceTask, Task} from "gulpclass";
 
 const gulp = require("gulp");
 const bump = require('gulp-bump');
@@ -56,7 +56,9 @@ export class Gulpfile {
     @MergedTask()
     packageCompile() {
         const tsProject = ts.createProject("tsconfig.json", {typescript: require("typescript")});
-        const tsResult = gulp.src(["./src/**/*.ts", "./node_modules/@types/**/*.ts"])
+        const tsResult = gulp.src([
+            "./src/**/*.ts",
+            "./node_modules/@types/**/*.ts"])
             .pipe(sourcemaps.init())
             .pipe(tsProject());
 
