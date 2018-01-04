@@ -4,10 +4,9 @@
  *
  */
 
-
+import * as _ from 'lodash'
 import {PlatformTools} from "./PlatformTools";
 import {StringOrFunction} from "../types";
-import {Utils} from "./Utils";
 
 /**
  * Loads all exported classes from the given directory.
@@ -19,8 +18,8 @@ export class ClassLoader {
         let klasses: Function[] = [];
 
         o.forEach(x => {
-            if (Utils.isString(x)) {
-                let _x = PlatformTools.pathNormilize(PlatformTools.pathResolve(<string>x));
+            if (_.isString(x)) {
+                let _x = PlatformTools.pathNormilize(PlatformTools.pathResolve(x));
                     let exported = ClassLoader.importClassesFromDirectories([_x]);
                     klasses = klasses.concat.apply(klasses,exported)
             } else if (x instanceof Function) {

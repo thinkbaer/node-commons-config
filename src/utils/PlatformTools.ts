@@ -6,6 +6,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import * as _ from 'lodash';
+import {deprecate} from "util";
 
 
 /**
@@ -73,12 +74,18 @@ export class PlatformTools {
    * Gets file extension. Does "path.extname".
    */
   static pathExtname(pathStr: string, dotted: boolean = true): string {
-    if (dotted) {
-      return path.extname(pathStr);
-    } else {
-      return path.extname(pathStr).replace('.', '');
+    let str = '';
+    if(/\$\{.*\}/.test(pathStr)){
+      str = this.withoutInterpolation(pathStr,(str) => {
+        return path.extname(str);
+      })
+    }else{
+      str = path.extname(pathStr);
     }
-
+    if (!dotted) {
+      str = str.replace('.', '');
+    }
+    return str;
   }
 
   /**
@@ -120,12 +127,39 @@ export class PlatformTools {
     return path.basename(pathStr);
   }
 
+  static withoutInterpolation(str:string, fn:(str:string) => string){
+    if(/\$\{.*\}/.test(str)){
+      // has interpolations
+      let regex = new RegExp(/\$\{.*\}/g);
+      let m = regex.exec(str);
+      let cache = {}
+      let inc = 0;
+      for(let _m of m){
+        let r = '###'+(inc++)+'###';
+        str = str.replace(_m,r);
+        cache[r] = _m;
+      }
+      str = fn(str);
+      for(let _m in cache){
+        str = str.replace(_m,cache[_m]);
+      }
+    }
+    return str;
+  }
+
   /**
    * Returns the filename only (without extension)
    */
   static filename(pathStr: string): string {
-    return path.basename(pathStr).replace(new RegExp('\\.' + path.extname(pathStr).replace('.', '') + '$'), '');
+    let base = path.basename(pathStr);
+    if(/\$\{.*\}/.test(base)){
+      return this.withoutInterpolation(base,(str) => {
+        return str.replace(new RegExp('\\' + path.extname(str) + '$'), '');
+      })
+    }
+    return base.replace(new RegExp('\\' + path.extname(base) + '$'), '');
   }
+
 
   /**
    * Returns the dirname of the file

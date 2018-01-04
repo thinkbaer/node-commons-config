@@ -179,7 +179,8 @@ export class Config {
 
     if(!_.isEmpty(this.$options.workdir)){
       PlatformTools.setWorkDir(this.$options.workdir);
-    }else{
+    }else if(_.has(this.$options,'workdir')){
+      // reset workdir, it is set to null
       PlatformTools.setWorkDir(null);
     }
 
