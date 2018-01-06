@@ -53,3 +53,7 @@ Thumbs.db
 
 !/src/config/handler/FileConfig.ts
 /ts-node/
+
+
+# package
+package-lock.json
