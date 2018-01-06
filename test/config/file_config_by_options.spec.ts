@@ -1,12 +1,5 @@
-import * as mocha from 'mocha';
-
-
-import {suite, test, slow, timeout, pending} from "mocha-typescript";
+import {suite, test} from "mocha-typescript";
 import {expect} from "chai";
-
-import {FileConfig} from "../../src/config/handler/FileConfig";
-import {SystemConfig} from "../../src/config/handler/SystemConfig";
-import {IConfigData} from "../../src/config/IConfigData";
 import {Config} from "../../src/config/Config";
 import {IFileConfigOptions} from "../../src/config/handler/IFileConfigOptions";
 import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
@@ -14,8 +7,6 @@ import {PlatformTools} from "../../src/utils/PlatformTools";
 
 const SUBTESTPATH: string = 'testfolders/file/config';
 
-describe('', () => {
-});
 
 @suite('config/handler/FileConfig loaded by Config.options')
 class FileConfigTests {

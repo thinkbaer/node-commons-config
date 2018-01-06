@@ -1,7 +1,3 @@
-import * as mocha from 'mocha';
-
-describe('', () => {
-});
 
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
@@ -15,10 +11,10 @@ import {Config} from "../../src/config/Config";
 import {SystemConfig} from "../../src/config/handler/SystemConfig";
 import {FileConfig} from "../../src/config/handler/FileConfig";
 import {ConfigJar} from "../../src/config/ConfigJar";
-import {inspect} from "util";
 
 
 const SUBTESTPATH: string = 'testfolders/file/config';
+
 
 @suite('config/handler/FileConfig load independently')
 class FileConfigTests {

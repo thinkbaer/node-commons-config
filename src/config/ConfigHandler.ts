@@ -25,7 +25,7 @@ export class ConfigHandler {
      *
      * @param directories
      */
-    static reload(directories: StringOrFunction | StringOrFunction[] = this.DEFAULT_HANDLER): boolean {
+    static reload(directories: StringOrFunction | StringOrFunction[] = ConfigHandler.DEFAULT_HANDLER): boolean {
         this.reset();
 
         let self = this;
