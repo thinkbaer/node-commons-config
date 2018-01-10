@@ -1,9 +1,4 @@
-import * as mocha from 'mocha';
-describe('', () => {
-});
-
-
-import {suite, test, slow, timeout, pending} from "mocha-typescript";
+import {suite, test} from "mocha-typescript";
 import {expect} from "chai";
 import * as os from 'os'
 
@@ -85,10 +80,10 @@ class ConfigTests {
 
         expect(Config.hasJar('default')).to.be.true;
 
-        // Returns all
+        // Returns all without system
         let all = Config.get();
-        expect(all).has.length(2);
-        expect(all[1]).to.deep.include({env: {hallo_welt: 'ja'}});
+        expect(all).has.length(1);
+        expect(all[0]).to.deep.include({env: {hallo_welt: 'ja'}});
 
         // Use fallback for get
         expect(Config.get('env.not_exists', 'NOT_FOUND')).to.eq('NOT_FOUND')

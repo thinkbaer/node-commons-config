@@ -221,8 +221,16 @@ export class Config {
 
   static get(path: string = null, namespace_or_fallback?: any, fallback?: any) {
     if (path == null) {
-      return this.jarsData;
+      let data = _.cloneDeep(this.jarsData);
+      if(this.hasJar('system')){
+        data.shift();
+      }
+      if(data.length > 1){
+        return _.merge(data.shift(), ...data);
+      }
+      return data;
     }
+
     let jars: ConfigJar[] = this.jars;
 
     if (Utils.isString(namespace_or_fallback) && this.hasJar(namespace_or_fallback)) {
