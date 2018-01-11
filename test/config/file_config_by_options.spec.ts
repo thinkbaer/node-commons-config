@@ -4,6 +4,7 @@ import {Config} from "../../src/config/Config";
 import {IFileConfigOptions} from "../../src/config/handler/IFileConfigOptions";
 import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
 import {PlatformTools} from "../../src/utils/PlatformTools";
+import {ConfigHandler} from "../../src/config/ConfigHandler";
 
 const SUBTESTPATH: string = 'testfolders/file/config';
 
@@ -44,7 +45,8 @@ class FileConfigTests {
     });
     opts = Config.instance()['$options'];
     expect(opts.configs.length).to.eq(2);
-    expect(opts.handlers.length).to.eq(2);
+    expect(opts.handlers.length).to.eq(4);
+    expect(ConfigHandler.amount()).to.eq(3);
     expect(opts.fileSupport.length).to.not.eq(0);
 
 

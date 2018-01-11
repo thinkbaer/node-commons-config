@@ -1,6 +1,6 @@
 {
   "name": "commons-config",
-  "version": "0.4.13",
+  "version": "0.4.15",
   "description": "Commons-config is a configurable configuration content handler which supports multiple configuration infrastructures and file formats.",
   "main": "index.js",
   "directories": {
@@ -35,17 +35,17 @@
     "@types/lodash": "^4.14.69",
     "@types/mocha": "^2.2.38",
     "@types/multimatch": "^2.1.1",
-    "@types/node": "^8.5.7",
+    "@types/node": "^9.3.0",
     "chai": "^4.0.2",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-bump": "^3.0.0",
-    "gulp-clean": "^0.3.2",
+    "gulp-clean": "^0.4.0",
     "gulp-mocha": "^5.0.0",
     "gulp-replace": "^0.6.1",
     "gulp-shell": "^0.6.3",
     "gulp-sourcemaps": "^2.6.0",
-    "gulp-typescript": "^3.1.7",
+    "gulp-typescript": "^4.0.0-alpha.1",
     "gulpclass": "^0.1.2",
     "js-yaml": "^3.8.4",
     "mocha": "^4.1.0",
@@ -59,7 +59,7 @@
     "x2js": "^3.1.1"
   },
   "dependencies": {
-    "deepmerge": "^1.5.2",
+    "deepmerge": "^2.0.1",
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
     "multimatch": "^2.1.0"

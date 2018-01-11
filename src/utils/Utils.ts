@@ -22,10 +22,21 @@ export class Utils {
         return _.cloneDeep(obj)
     }
 
-    static mergeArray(dest:any[],source:any[],options:merge.Options){
+    static mergeArray(dest:any[],source:any[],options?:merge.Options){
         let res = _.concat(dest,source);
-        res = _.uniqBy(res,(_r)=>{return JSON.stringify(_r)});
-        return res
+        return Utils.uniqArr(res)
+    }
+
+    static uniqArr(res:any[]){
+      return _.uniqBy(res,(entry)=>{
+        let x = null
+        if(_.isFunction(entry)){
+          x = entry.toString();
+        }else{
+          x = JSON.stringify(entry);
+        }
+        return x
+      });
     }
 
     static merge(...args: any[]): any {

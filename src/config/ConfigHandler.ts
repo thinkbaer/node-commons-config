@@ -6,6 +6,7 @@ import {ConfigSupport} from "./ConfigSupport";
 import {IConfigOptions} from "./IConfigOptions";
 import {IConfigData} from "./IConfigData";
 import {DirectoryConfig} from "./handler/DirectoryConfig";
+import {Utils} from "../";
 
 
 export class ConfigHandler {
@@ -34,6 +35,7 @@ export class ConfigHandler {
         }
         let classes = ClassLoader.importClassesFromAny(directories);
 
+        classes = Utils.uniqArr(classes);
         classes.forEach((klass: Function) => {
 
             let l: any = null;
