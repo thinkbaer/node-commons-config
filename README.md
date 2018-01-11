@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/thinkbaer/node-commons-config.svg?branch=master)](https://travis-ci.org/thinkbaer/node-commons-config)
 [![codecov](https://codecov.io/gh/thinkbaer/node-commons-config/branch/master/graph/badge.svg)](https://codecov.io/gh/thinkbaer/node-commons-config)
-[![Dependency Status](https://www.versioneye.com/user/projects/596932736725bd004ea696cd/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/596932736725bd004ea696cd)
+[![Dependency Status](https://david-dm.org/thinkbaer/node-commons-config.svg)](https://david-dm.org/thinkbaer/node-commons-config)
 
 
 Commons-config is a configurable configuration content handler which supports
