@@ -1,4 +1,3 @@
-export type StringOrFunction = string | Function
 
 
 export const DEFAULT_JAR_NAME: string = 'default';

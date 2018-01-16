@@ -1,5 +1,5 @@
 import {IConfigOptions} from "./IConfigOptions";
-import {StringOrFunction} from "../types";
+import {StringOrFunction} from "commons-base";
 
 
 export interface IOptions {

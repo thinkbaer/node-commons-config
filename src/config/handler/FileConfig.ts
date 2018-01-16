@@ -4,12 +4,13 @@ import {ConfigSupport} from "../ConfigSupport";
 import {ConfigJar} from "../ConfigJar";
 import {IFileConfigOptions} from "./IFileConfigOptions";
 import {FileSupport} from "../../filesupport/FileSupport";
-import {PlatformTools} from "../../utils/PlatformTools";
+
 import {IConfigData} from "../IConfigData";
 
 import {IFilePath} from "./IFilePath";
 import {FileSource} from "./FileSource";
 import {IJarOptions} from "../IJarOptions";
+import {PlatformUtils} from "commons-base";
 
 
 /**
@@ -35,7 +36,7 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
     while (!used_ext && supportedTypes.length > 0) {
       let ext = supportedTypes.shift();
       used_path = file.dirname + '/' + file.filename + '.' + ext;
-      if (PlatformTools.fileExist(used_path)) {
+      if (PlatformUtils.fileExist(used_path)) {
         used_ext = ext
       }
     }
@@ -95,15 +96,15 @@ export class FileConfig extends ConfigSupport<IFileConfigOptions> {
   private explodeFilePath(path: string | IFilePath): IFilePath {
     let file: IFilePath = null;
     if (typeof path === 'string') {
-      let filepath = PlatformTools.pathNormilize(PlatformTools.pathResolve(path));
+      let filepath = PlatformUtils.pathNormilize(PlatformUtils.pathResolve(path));
       file = {
-        dirname: PlatformTools.dirname(filepath),
-        filename: PlatformTools.filename(filepath),
-        type: PlatformTools.pathExtname(filepath),
+        dirname: PlatformUtils.dirname(filepath),
+        filename: PlatformUtils.filename(filepath),
+        type: PlatformUtils.pathExtname(filepath),
       }
     } else {
       file = path;
-      file.dirname = PlatformTools.pathNormilize(PlatformTools.pathResolve(file.dirname))
+      file.dirname = PlatformUtils.pathNormilize(PlatformUtils.pathResolve(file.dirname))
       // TODO check if extension is falsely set in filename
     }
     return file

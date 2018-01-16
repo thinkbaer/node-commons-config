@@ -3,8 +3,8 @@ import {expect} from "chai";
 import {Config} from "../../src/config/Config";
 import {IFileConfigOptions} from "../../src/config/handler/IFileConfigOptions";
 import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
-import {PlatformTools} from "../../src/utils/PlatformTools";
 import {ConfigHandler} from "../../src/config/ConfigHandler";
+import {PlatformUtils} from "commons-base";
 
 const SUBTESTPATH: string = 'testfolders/file/config';
 
@@ -94,7 +94,7 @@ class FileConfigTests {
 
     expect(first_key).to.eq('other');
     expect(jars[first_key]['_source'][0].source).to.eq('file');
-    expect(jars[first_key]['_source'][0]['file'].dirname).to.eq(PlatformTools.pathNormilize(__dirname + `/../${SUBTESTPATH}`));
+    expect(jars[first_key]['_source'][0]['file'].dirname).to.eq(PlatformUtils.pathNormilize(__dirname + `/../${SUBTESTPATH}`));
     expect(jars[first_key]['_source'][0]['file'].filename).to.eq('default');
     expect(jars[first_key]['_source'][0]['file'].type).to.eq('json');
 

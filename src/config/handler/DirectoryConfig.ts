@@ -1,6 +1,5 @@
 import {IDirectoryConfigOptions} from "./IDirectoryConfigOptions";
 import {ConfigJar} from "../ConfigJar";
-import {PlatformTools} from "../../utils/PlatformTools";
 
 import {Utils} from "../../utils/Utils";
 import {IFilePath} from "./IFilePath";
@@ -16,6 +15,7 @@ import {ConfigSupport} from "../ConfigSupport";
 import * as multimatch from "multimatch";
 import {FileConfig} from "./FileConfig";
 import {IConfigData} from "../IConfigData";
+import {PlatformUtils} from "commons-base";
 
 
 /**
@@ -51,11 +51,11 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
     }
 
     listFilesInDirectory(): IFileConfigOptions[] {
-        let dirname = PlatformTools.pathNormAndResolve(this.$options.dirname);
-        if (!PlatformTools.fileExist(dirname) || !PlatformTools.isDir(dirname)) {
+        let dirname = PlatformUtils.pathNormAndResolve(this.$options.dirname);
+        if (!PlatformUtils.fileExist(dirname) || !PlatformUtils.isDir(dirname)) {
             throw new Error('wrong directory ' + dirname)
         }
-        let list: string[] = PlatformTools.load("glob").sync(dirname + '/**');
+        let list: string[] = PlatformUtils.load("glob").sync(dirname + '/**');
         let regex: string = Utils.escapeRegExp(this.$options.patternSeparator);
 
         let patternRegex = new RegExp(regex, 'g');
@@ -79,19 +79,19 @@ export class DirectoryConfig extends ConfigSupport<IDirectoryConfigOptions> {
                 }
             }
 
-            let is_file = PlatformTools.isFile(file_or_dir);
+            let is_file = PlatformUtils.isFile(file_or_dir);
             let paths = path.replace(/^\//, '').split('/');
 
             if (is_file) {
                 let filename_ext = paths.pop();
-                let filename = PlatformTools.filename(filename_ext);
+                let filename = PlatformUtils.filename(filename_ext);
 
                 if (!patternRegex.test(filename)) {
 
                     let file: IFilePath = {
                         dirname: file_or_dir.replace(filename_ext, ''),
                         filename: filename,
-                        type: PlatformTools.pathExtname(filename_ext, false)
+                        type: PlatformUtils.pathExtname(filename_ext, false)
                     };
 
                     let fileCfg: IFileConfigOptions = {

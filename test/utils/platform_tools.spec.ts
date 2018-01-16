@@ -5,42 +5,42 @@ describe('',()=>{});
 
 import {suite, test, slow, timeout, pending} from "mocha-typescript";
 import {expect} from "chai";
-import {PlatformTools} from "../../src/utils/PlatformTools";
+import {PlatformUtils} from "commons-base";
 
 
 //import * as config from 'config';
 
 
 
-@suite('utils/PlatformTools')
-class PlatformToolsTests {
+@suite('utils/PlatformUtils')
+class PlatformUtilsTests {
 
     @test
     'tests' () {
         let path = '/tmp/testfile.html';
-        let normPath = PlatformTools.pathNormilize(path);
+        let normPath = PlatformUtils.pathNormilize(path);
         expect(path).to.eq(normPath);
 
         let path2 = '/tmp/test/../testfile.html';
-        normPath = PlatformTools.pathNormilize(path2);
+        normPath = PlatformUtils.pathNormilize(path2);
         expect(path).to.eq(normPath);
 
-        let basename = PlatformTools.basename(path);
-        let filename = PlatformTools.filename(path);
-        let ext = PlatformTools.pathExtname(path);
+        let basename = PlatformUtils.basename(path);
+        let filename = PlatformUtils.filename(path);
+        let ext = PlatformUtils.pathExtname(path);
         expect(basename).to.eq(filename + '' + ext);
 
-        ext = PlatformTools.pathExtname(filename);
+        ext = PlatformUtils.pathExtname(filename);
         expect(ext).to.eq('');
 
         let path3 = '/tmp/test/../testfile';
-        filename = PlatformTools.filename(path3);
+        filename = PlatformUtils.filename(path3);
         expect(filename).to.eq('testfile');
 
         let path4 = './test/testfile.html';
-        normPath = PlatformTools.pathResolve(path4);
+        normPath = PlatformUtils.pathResolve(path4);
 
-        expect(normPath).to.eq(PlatformTools.pathNormilize(__dirname+'/../../test/testfile.html'))
+        expect(normPath).to.eq(PlatformUtils.pathNormilize(__dirname+'/../../test/testfile.html'))
 
     }
 

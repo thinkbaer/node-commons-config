@@ -1,6 +1,6 @@
 import {IConfigData} from "../../config/IConfigData";
-import {PlatformTools} from "../../utils/PlatformTools";
 import {IFileSupport} from "../IFileSupport";
+import {PlatformUtils} from "commons-base";
 
 let Yaml:any, VisionmediaYaml:any;
 
@@ -8,10 +8,10 @@ export class YamlFileSupport implements IFileSupport {
 
     requirements(): void {
         try {
-            Yaml = PlatformTools.load('js-yaml');
+            Yaml = PlatformUtils.load('js-yaml');
         }
         catch (e) {
-            VisionmediaYaml = PlatformTools.load('yaml');
+            VisionmediaYaml = PlatformUtils.load('yaml');
         }
     }
 

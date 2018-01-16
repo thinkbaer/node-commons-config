@@ -11,7 +11,8 @@ import {IJarOptions} from "./IJarOptions";
 import {DEFAULT_JAR_NAME} from "../types";
 import {ConfigSupport} from "./ConfigSupport";
 import {InterpolationSupport} from "../supports/InterpolationSupport";
-import {PlatformTools} from "../";
+import {PlatformUtils} from "commons-base";
+
 
 
 export class Config {
@@ -178,10 +179,10 @@ export class Config {
     }
 
     if(!_.isEmpty(this.$options.workdir)){
-      PlatformTools.setWorkDir(this.$options.workdir);
+      PlatformUtils.setWorkDir(this.$options.workdir);
     }else if(_.has(this.$options,'workdir')){
       // reset workdir, it is set to null
-      PlatformTools.setWorkDir(null);
+      PlatformUtils.setWorkDir(null);
     }
 
     ConfigHandler.reload(this.$options.handlers);
@@ -260,7 +261,7 @@ export class Config {
 
   static clear(): void {
     this.$self = null;
-    PlatformTools.setWorkDir(null);
+    PlatformUtils.setWorkDir(null);
   }
 
 

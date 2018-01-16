@@ -50,6 +50,12 @@ class Tests {
 
     let resCfg2 = deepmerge.all([{cfg: <any>[SystemConfig]}, {cfg: <any>[SystemConfig]}], {arrayMerge: Utils.mergeArray});
     expect(resCfg2).to.deep.eq({cfg: [SystemConfig]});
+
+    let resCfg3 = deepmerge.all([{cfg: {name:'test'}}, {cfg: {name:'nottest'}}], {arrayMerge: Utils.mergeArray});
+    expect(resCfg3).to.deep.eq({cfg: {name:'nottest'}});
+
+
+
   }
 
 

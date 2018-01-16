@@ -1,15 +1,15 @@
 
 
 import {IConfigData} from "../../config/IConfigData";
-import {PlatformTools} from "../../utils/PlatformTools";
 import {IFileSupport} from "../IFileSupport";
+import {PlatformUtils} from "commons-base";
 
 let XML:any;
 
 export class XmlFileSupport implements IFileSupport{
 
     requirements():void {
-        PlatformTools.load('x2js')
+        PlatformUtils.load('x2js')
     }
 
     supportedTypes(): string | string[] {
@@ -18,7 +18,7 @@ export class XmlFileSupport implements IFileSupport{
 
     parse(content:string):IConfigData{
         if(!XML){
-            XML = PlatformTools.load('x2js')
+            XML = PlatformUtils.load('x2js')
         }
         let x2js = new XML();
         let rawConfig : IConfigData = x2js.xml2js(content);

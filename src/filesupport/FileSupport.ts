@@ -1,14 +1,13 @@
-import {ClassLoader} from "../utils/ClassLoader";
 
 import {Utils} from "../utils/Utils";
 import {IFileSupportInfo} from "./IFileSupportInfo";
 import {IFileSupport} from "./IFileSupport";
-import {StringOrFunction} from "../types";
 
 import {JsonFileSupport} from "./types/JsonFileSupport";
 import {XmlFileSupport} from "./types/XmlFileSupport";
 import {YamlFileSupport} from "./types/YamlFileSupport";
 import {PropertiesFileSupport} from "./types/PropertiesFileSupport";
+import {ClassLoader, StringOrFunction} from "commons-base";
 
 
 /**

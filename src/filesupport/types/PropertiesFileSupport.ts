@@ -1,7 +1,7 @@
 import {IConfigData} from "../../config/IConfigData";
-import {PlatformTools} from "../../utils/PlatformTools";
 import {IFileSupport} from "../IFileSupport";
 import {clone} from "lodash"
+import {PlatformUtils} from "commons-base";
 
 let Prop:any;
 
@@ -16,7 +16,7 @@ const OPTIONS = {
 export class PropertiesFileSupport implements IFileSupport {
 
     requirements(): void {
-        Prop = PlatformTools.load('properties');
+        Prop = PlatformUtils.load('properties');
     }
 
     supportedTypes(): string | string[] {

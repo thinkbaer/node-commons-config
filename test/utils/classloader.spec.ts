@@ -1,8 +1,8 @@
 import {suite, test} from "mocha-typescript";
 import {expect} from "chai";
 
-import {ClassLoader} from "../../src/utils/ClassLoader";
 import {JsonFileSupport} from "../../src/filesupport/types/JsonFileSupport";
+import {ClassLoader} from "commons-base";
 
 
 //import * as config from 'config';
