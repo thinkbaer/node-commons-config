@@ -164,8 +164,8 @@ class FileConfigTests {
     opts = Config.options({configs: [{type: 'file', file: '${env.configfile}'}]});
 
     expect(opts.configs).has.length(2);
-    expect(opts.configs).to.deep.include({type: 'system', state: true});
-    expect(opts.configs).to.deep.include({
+    expect(opts.configs[0]).to.deep.include({type: 'system', state: true});
+    expect(opts.configs[1]).to.deep.include({
       type: 'file',
       file: process.env['configfile'],
       state: true,
@@ -183,7 +183,8 @@ class FileConfigTests {
         {type: 'file', file: dir + '/${appname}.json'}
       ]
     });
-    expect(opts.configs).to.deep.include({
+    expect(opts.configs).to.have.length(3)
+    expect(opts.configs[2]).to.deep.include({
       type: 'file',
       file: dir + '/hallo.json',
       state: true,
@@ -203,7 +204,8 @@ class FileConfigTests {
     });
 
     expect(opts.workdir).to.eq('./test/testfolders/file/config');
-    expect(opts.configs).to.deep.include({
+    expect(opts.configs).to.have.length(2)
+    expect(opts.configs[1]).to.deep.include({
       type: 'file',
       file: './app.json',
       state: true,

@@ -43,14 +43,14 @@ export class Utils {
 
 
   static merge(...args: any[]): any {
-    let first = args.shift();
+    let first = _.cloneDeep(args.shift());
     return _.mergeWith(first, ...args, (dest: any, source: any) => {
       if (_.isArray(dest)) {
         let res = _.concat(dest, source);
         return Utils.uniqArr(res)
-      } else if(_.isPlainObject(dest)){
-        return _.merge(dest,source);
-      }else{
+      } else if (_.isPlainObject(dest)) {
+        return Utils.merge(dest, source);
+      } else {
         return source;
       }
 
