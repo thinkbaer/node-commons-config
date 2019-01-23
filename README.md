@@ -201,6 +201,10 @@ import {Config} from "commons-config";
 Config.options({ ... })
 ```
 
+## Notice
+
+* All enviroment variables in "env" are lower-case
+
 
 
 

@@ -7,9 +7,6 @@ import {ConfigJar} from "../../src/config/ConfigJar";
 import {IConfigData} from "../../src/config/IConfigData";
 
 
-//import * as config from 'config';
-
-
 @suite('config/Config')
 class ConfigTests {
 
